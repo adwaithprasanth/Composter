@@ -1,8 +1,10 @@
 import inquirer from "inquirer";
 import fetch from "node-fetch";
 import { saveSession } from "../utils/session.js";
+import dotenv from "dotenv";
+dotenv.config();
 
-const BASE_URL = "http://localhost:3000/api/auth";
+const BASE_URL = `${process.env.BASE_URL}/auth`;
 
 export async function login() {
   console.log("=== Composter Login ===");

@@ -1,7 +1,9 @@
 import fetch from "node-fetch";
 import { loadSession } from "./session.js";
+import dotenv from "dotenv";
+dotenv.config();
 
-const BASE_URL = "http://localhost:3000/api/auth"; // change later in prod
+const BASE_URL = process.env.BASE_URL; // change later in prod
 
 export async function apiRequest(path, options = {}) {
   const session = loadSession();

@@ -10,6 +10,8 @@ const auth = betterAuth({
     connectionString: process.env.DATABASE_URL,
   }),
 
+  baseURL: process.env.BETTER_AUTH_URL || "http://localhost:3000",
+
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: false
@@ -22,4 +24,4 @@ const auth = betterAuth({
   ],
 })
 
-export default auth
+export default auth;
