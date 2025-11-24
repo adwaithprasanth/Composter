@@ -1,30 +1,18 @@
-const { Command } = require("commander");
+#!/usr/bin/env node
+
+import { Command } from "commander";
+import { login } from "./commands/login.js";
+
 const program = new Command();
 
 program
   .name("composter")
-  .description("Component vault CLI")
-  .version("1.0.0");
+  .description("CLI for Composter Platform")
+  .version("0.1.0");
 
 program
   .command("login")
-  .description("login and store API key")
-  .action(() => {
-    console.log("login called");
-  });
+  .description("Log into your Composter account")
+  .action(login);
 
-program
-  .command("push <file>")
-  .description("push a component")
-  .action((file) => {
-    console.log("push called", file);
-  });
-
-program
-  .command("list")
-  .description("list components")
-  .action(() => {
-    console.log("list called");
-  });
-
-program.parse();
+program.parse(process.argv);
