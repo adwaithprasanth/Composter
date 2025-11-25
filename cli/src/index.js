@@ -4,6 +4,7 @@ import { Command } from "commander";
 import { login } from "./commands/login.js";
 import { mkcat } from "./commands/mkcat.js";
 import { listCategories } from "./commands/listCat.js";
+import { pushComponent } from "./commands/push.js";
 
 const program = new Command();
 
@@ -27,6 +28,13 @@ program
   .description("List categories")
   .action(() => {
     listCategories();
+  });
+
+program
+  .command("push <category-name> <component-title> <file-path>")
+  .description("Push a new component")
+  .action((category, title, filepath) => {
+    pushComponent(category, title, filepath);
   });
 
 program.parse(process.argv);

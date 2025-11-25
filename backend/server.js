@@ -3,6 +3,7 @@ import { toNodeHandler, fromNodeHeaders } from "better-auth/node";
 import auth from "./auth/auth.ts";
 import cors from "cors";
 import categoryRouter from "./routes/cliCategoryRoute.js";
+import componentRouter from "./routes/cliComponentRoute.js";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -26,6 +27,8 @@ app.use(express.json());
 app.use("/api/categories", categoryRouter);
 //List Categories Route
 app.use("/api/categories", categoryRouter);
+//Create Component Route
+app.use("/api/components", componentRouter);
 
 
 //Get Current User Session

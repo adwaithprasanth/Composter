@@ -2,7 +2,12 @@ import inquirer from "inquirer";
 import fetch from "node-fetch";
 import { saveSession } from "../utils/session.js";
 import dotenv from "dotenv";
-dotenv.config({ silent: true });
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+dotenv.config({ path: join(__dirname, '../../.env') });
 
 const BASE_URL = `${process.env.BASE_URL}/auth`;
 
