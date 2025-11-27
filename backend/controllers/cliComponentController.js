@@ -1,5 +1,64 @@
 import prisma from "../prisma/prisma.js";
 
+export async function getComponentById(req, res) {
+  try {
+    const userId = req.user.id;
+    const { id } = req.params;
+
+    const component = await prisma.component.findFirst({
+      where: { 
+        id,
+        userId 
+      },
+      include: {
+        category: {
+          select: {
+            name: true
+          }
+        }
+      }
+    });
+
+    if (!component) {
+      return res.status(404).json({ error: "Component not found" });
+    }
+
+    return res.status(200).json({ component });
+  } catch (err) {
+    console.error("Get Component Error:", err);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+}
+
+export async function listComponents(req, res) {
+  try {
+    const userId = req.user.id;
+
+    const components = await prisma.component.findMany({
+      where: { userId },
+      select: {
+        id: true,
+        title: true,
+        code: true,
+        createdAt: true,
+        category: {
+          select: {
+            name: true
+          }
+        }
+      },
+      orderBy: {
+        createdAt: 'desc'
+      }
+    });
+
+    return res.status(200).json({ components });
+  } catch (err) {
+    console.error("List Components Error:", err);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+}
+
 export async function countComponents(req, res){
   try{
     const userId = req.user.id;
