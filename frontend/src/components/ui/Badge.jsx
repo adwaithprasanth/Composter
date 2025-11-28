@@ -8,7 +8,7 @@ const Badge = ({
     const variants = {
         default: "bg-violet-500/20 text-violet-200 border border-violet-500/20",
         outline: "bg-transparent border border-white/20 text-white/70",
-        secondary: "bg-white/5 text-white/60 border border-white/5",
+        secondary: "bg-[#060010] text-white/60 border border-white/5",
         success: "bg-emerald-500/20 text-emerald-200 border border-emerald-500/20",
     };
 

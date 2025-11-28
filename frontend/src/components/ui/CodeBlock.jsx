@@ -17,7 +17,7 @@ const CodeBlock = ({ code, language = "jsx", className = "" }) => {
             <div className="absolute right-2 top-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
                 <button
                     onClick={handleCopy}
-                    className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white/70 hover:text-white transition-colors flex items-center gap-2"
+                    className="p-2 rounded-lg bg-[#060010] hover:bg-[#0a0018] text-white/70 hover:text-white transition-colors flex items-center gap-2"
                     title="Copy code"
                 >
                     {copied ? <Check size={16} /> : <Copy size={16} />}

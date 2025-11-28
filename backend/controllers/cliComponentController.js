@@ -59,6 +59,36 @@ export async function listComponents(req, res) {
   }
 }
 
+export async function recentComponents(req, res) {
+  try {
+    const userId = req.user.id;
+    const limit = parseInt(req.query.limit) || 5;
+
+    const components = await prisma.component.findMany({
+      where: { userId },
+      select: {
+        id: true,
+        title: true,
+        createdAt: true,
+        category: {
+          select: {
+            name: true
+          }
+        }
+      },
+      orderBy: {
+        createdAt: 'desc'
+      },
+      take: limit
+    });
+
+    return res.status(200).json({ components });
+  } catch (err) {
+    console.error("Recent Components Error:", err);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+}
+
 export async function countComponents(req, res){
   try{
     const userId = req.user.id;

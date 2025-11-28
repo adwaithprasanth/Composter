@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Search } from "lucide-react";
+import { Search, Filter } from "lucide-react";
 import { Link } from "react-router-dom";
 import { SandpackProvider, SandpackPreview } from "@codesandbox/sandpack-react";
 import { dracula } from "@codesandbox/sandpack-themes";
@@ -9,6 +9,9 @@ import Button from "../../components/ui/Button.jsx";
 const ComponentsList = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [components, setComponents] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [showFilter, setShowFilter] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -29,14 +32,32 @@ const ComponentsList = () => {
       }
     };
 
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/categories`, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        });
+        const data = await response.json();
+        setCategories(data.categories || []);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
     fetchComponents();
+    fetchCategories();
   }, []);
 
-  // Filter components based on search query
+  // Filter components based on search query and category
   const displayComponents = components.filter((comp) => {
     const query = searchQuery.toLowerCase();
-    return comp.title.toLowerCase().includes(query) ||
+    const matchesSearch = comp.title.toLowerCase().includes(query) ||
            (comp.category?.name || "").toLowerCase().includes(query);
+    const matchesCategory = selectedCategory === "all" || comp.category?.name === selectedCategory;
+    return matchesSearch && matchesCategory;
   });
 
   const formatTimeAgo = (dateString) => {
@@ -68,8 +89,8 @@ const ComponentsList = () => {
         </Link>
       </div>
 
-      {/* Search Bar */}
-      <div className="flex items-center gap-4 bg-white/5 p-2 rounded-2xl border border-white/10">
+      {/* Search Bar with Filter */}
+      <div className="flex items-center gap-4 bg-[#060010] p-2 rounded-2xl border border-white/10">
         <div className="flex-1 relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40" size={18} />
           <input
@@ -79,6 +100,56 @@ const ComponentsList = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
+        </div>
+        <div className="relative">
+          <button
+            onClick={() => setShowFilter(!showFilter)}
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-colors ${
+              selectedCategory !== "all" 
+                ? "bg-violet-500/20 text-violet-300 border border-violet-500/30" 
+                : "bg-[#0a0018] text-white/70 hover:text-white border border-white/10"
+            }`}
+          >
+            <Filter size={18} />
+            <span className="text-sm font-medium">
+              {selectedCategory === "all" ? "Filter" : selectedCategory}
+            </span>
+          </button>
+          
+          {/* Filter Dropdown */}
+          {showFilter && (
+            <div className="absolute right-0 mt-2 w-56 bg-[#060010] border border-white/10 rounded-xl shadow-xl z-50 overflow-hidden">
+              <button
+                onClick={() => {
+                  setSelectedCategory("all");
+                  setShowFilter(false);
+                }}
+                className={`w-full px-4 py-3 text-left text-sm transition-colors ${
+                  selectedCategory === "all"
+                    ? "bg-violet-500/20 text-violet-300"
+                    : "text-white/70 hover:bg-[#0a0018] hover:text-white"
+                }`}
+              >
+                All Categories
+              </button>
+              {categories.map((category) => (
+                <button
+                  key={category.id}
+                  onClick={() => {
+                    setSelectedCategory(category.name);
+                    setShowFilter(false);
+                  }}
+                  className={`w-full px-4 py-3 text-left text-sm transition-colors ${
+                    selectedCategory === category.name
+                      ? "bg-violet-500/20 text-violet-300"
+                      : "text-white/70 hover:bg-[#0a0018] hover:text-white"
+                  }`}
+                >
+                  {category.name}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 

@@ -23,7 +23,7 @@ const Input = ({
                 type={type}
                 className={`
           w-full px-4 py-2.5 rounded-xl
-          bg-white/5 border border-white/10
+          bg-[#060010] border border-white/10
           text-white placeholder-white/30
           outline-none transition-all duration-200
           focus:border-violet-500/50 focus:ring-2 focus:ring-violet-500/20

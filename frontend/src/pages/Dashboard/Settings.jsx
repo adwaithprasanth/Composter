@@ -76,8 +76,8 @@ const Settings = () => {
                         <button
                             key={item.label}
                             className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${item.active
-                                ? "bg-white/10 text-white font-medium"
-                                : "text-white/60 hover:text-white hover:bg-white/5"
+                                ? "bg-[#060010] text-white font-medium"
+                                : "text-white/60 hover:text-white hover:bg-[#060010]"
                                 }`}
                         >
                             <item.icon size={18} />

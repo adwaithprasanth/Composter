@@ -34,7 +34,7 @@ export const DropDownItem = ({ children, onClick }) => {
   return (
     <button
       onClick={onClick}
-      className="w-full px-4 py-3 text-left text-zinc-300 hover:bg-white/5 hover:text-white transition-colors"
+      className="w-full px-4 py-3 text-left text-zinc-300 hover:bg-[#060010] hover:text-white transition-colors"
     >
       {children}
     </button>

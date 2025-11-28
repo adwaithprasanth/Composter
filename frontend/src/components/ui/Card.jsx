@@ -1,8 +1,7 @@
 import React, { memo } from "react";
-import GlassSurface from "../external/GlassSurface.jsx";
 
 /**
- * Reusable Card component based on the GlassSurface.
+ * Reusable Card component with solid background.
  * Provides a consistent container with optional hover effects.
  */
 const Card = ({
@@ -14,21 +13,22 @@ const Card = ({
     ...props
 }) => {
     return (
-        <GlassSurface
-            width={width}
-            height={height}
-            borderRadius={24}
+        <div
             className={`
-        ${className}
-        ${hoverEffect ? 'hover:scale-[1.02] hover:brightness-110 cursor-pointer' : ''}
-`}
-            mixBlendMode="normal"
+                bg-[#060010] border border-white/10 rounded-3xl
+                ${hoverEffect ? 'hover:scale-[1.02] hover:bg-[#0a0018] cursor-pointer transition-all duration-150' : ''}
+                ${className}
+            `}
+            style={{
+                width: typeof width === 'number' ? `${width}px` : width,
+                height: typeof height === 'number' ? `${height}px` : height,
+            }}
             {...props}
         >
-            <div className="w-full h-full p-6 relative z-10">
+            <div className="w-full h-full p-6 relative">
                 {children}
             </div>
-        </GlassSurface>
+        </div>
     );
 };
 

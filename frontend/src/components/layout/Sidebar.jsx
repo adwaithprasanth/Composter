@@ -1,7 +1,6 @@
 import React from "react";
 import { NavLink, Link } from "react-router-dom";
 import { Home, Box, Tag, User, Settings, LogOut, Book } from "lucide-react";
-import GlassSurface from "../external/GlassSurface.jsx";
 
 const Sidebar = () => {
     // Our main navigation items.
@@ -11,21 +10,13 @@ const Sidebar = () => {
         { icon: Box, label: "My Components", path: "/app/components" },
         { icon: Tag, label: "Tags", path: "/app/tags" },
         { icon: Book, label: "Documentation", path: "/dashboard/docs" },
-        { icon: User, label: "Account", path: "/app/account" },
         { icon: Settings, label: "Settings", path: "/app/settings" },
     ];
 
     return (
         <div className="w-64 h-screen fixed left-0 top-0 p-4 z-40">
-            {/* Using GlassSurface for that nice premium feel */}
-            <GlassSurface
-                width="100%"
-                height="100%"
-                borderRadius={24}
-                className="h-full"
-                mixBlendMode="normal"
-            >
-                <div className="flex flex-col h-full p-4 text-white relative z-10">
+            <div className="h-full bg-[#060010] border border-white/10 rounded-3xl">
+                <div className="flex flex-col h-full p-4 text-white relative">
                     {/* Logo Area */}
                     <Link to="/" className="block mb-8 px-2 hover:opacity-80 transition-opacity">
                         <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-violet-400 to-fuchsia-400">
@@ -44,8 +35,8 @@ const Sidebar = () => {
                                 className={({ isActive }) => `
                   flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200
                   ${isActive
-                                        ? "bg-white/10 text-white shadow-lg shadow-violet-500/10"
-                                        : "text-white/60 hover:text-white hover:bg-white/5"
+                                        ? "bg-[#0a0018] text-white shadow-lg shadow-violet-500/10"
+                                        : "text-white/60 hover:text-white hover:bg-[#060010]"
                                     }
                 `}
                             >
@@ -63,7 +54,7 @@ const Sidebar = () => {
                         </button>
                     </div>
                 </div>
-            </GlassSurface>
+            </div>
         </div>
     );
 };

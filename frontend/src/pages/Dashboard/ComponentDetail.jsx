@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
-import { ArrowLeft, Copy, Clock, Layers } from "lucide-react";
+import { ArrowLeft, Copy, Clock, Layers, FileText, FolderTree, PackageIcon } from "lucide-react";
 import { Sandpack } from "@codesandbox/sandpack-react";
 import { dracula } from "@codesandbox/sandpack-themes";
 import Card from "../../components/ui/Card.jsx";
@@ -13,6 +13,7 @@ const ComponentDetail = () => {
   const [activeTab, setActiveTab] = useState("preview");
   const [component, setComponent] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [selectedFile, setSelectedFile] = useState(null);
 
   useEffect(() => {
     const fetchComponent = async () => {
@@ -113,6 +114,66 @@ root.render(
     };
   }, [component]);
 
+  // Generate file tree structure from files
+  const fileTree = useMemo(() => {
+    if (!sandpackFiles || Object.keys(sandpackFiles).length === 0) return [];
+
+    const tree = {};
+    const visibleFiles = Object.keys(sandpackFiles).filter(
+      path => path !== '/root.js' && path !== '/public/index.html'
+    );
+
+    visibleFiles.forEach(filePath => {
+      const parts = filePath.split('/').filter(Boolean);
+      let current = tree;
+
+      parts.forEach((part, index) => {
+        if (index === parts.length - 1) {
+          // It's a file
+          current[part] = { type: 'file', path: filePath };
+        } else {
+          // It's a folder
+          if (!current[part]) {
+            current[part] = { type: 'folder', children: {} };
+          }
+          current = current[part].children;
+        }
+      });
+    });
+
+    return tree;
+  }, [sandpackFiles]);
+
+  // Generate instructions based on file structure
+  const instructions = useMemo(() => {
+    if (!component) return "";
+
+    const fileCount = Object.keys(sandpackFiles).filter(
+      path => path !== '/root.js' && path !== '/public/index.html'
+    ).length;
+
+    const depsCount = Object.keys(dependencies).length;
+
+    return `## ${component.title}
+
+### Overview
+This component is located in the **${component.category?.name || "Uncategorized"}** category.
+
+### File Structure
+This component contains **${fileCount}** file${fileCount > 1 ? 's' : ''}:
+${Object.keys(sandpackFiles)
+  .filter(path => path !== '/root.js' && path !== '/public/index.html')
+  .map(file => `- \`${file}\``)
+  .join('\n')}
+
+${depsCount > 0 ? `### Dependencies
+This component requires **${depsCount}** external package${depsCount > 1 ? 's' : ''}:
+${Object.entries(dependencies).map(([name, version]) => `- **${name}**: ${version}`).join('\n')}` : ''}
+
+### Usage
+Import and use this component in your React application. Make sure all dependencies are installed and file paths are correctly set up.`;
+  }, [component, sandpackFiles, dependencies]);
+
   const formatTimeAgo = (dateString) => {
     const date = new Date(dateString);
     const now = new Date();
@@ -133,6 +194,41 @@ root.render(
     }
   };
 
+  // Render file tree recursively
+  const renderFileTree = (tree, parentPath = '') => {
+    return Object.entries(tree).map(([name, node]) => {
+      if (node.type === 'file') {
+        const isSelected = selectedFile === node.path;
+        return (
+          <button
+            key={node.path}
+            onClick={() => setSelectedFile(node.path)}
+            className={`flex items-center gap-2 px-3 py-2 text-sm rounded-lg transition-colors w-full text-left ${
+              isSelected
+                ? 'bg-violet-500/20 text-violet-300'
+                : 'text-white/70 hover:text-white hover:bg-[#060010]'
+            }`}
+          >
+            <FileText size={16} />
+            <span>{name}</span>
+          </button>
+        );
+      } else {
+        return (
+          <div key={`${parentPath}/${name}`} className="space-y-1">
+            <div className="flex items-center gap-2 px-3 py-2 text-sm text-white/50">
+              <FolderTree size={16} />
+              <span>{name}</span>
+            </div>
+            <div className="ml-4 space-y-1">
+              {renderFileTree(node.children, `${parentPath}/${name}`)}
+            </div>
+          </div>
+        );
+      }
+    });
+  };
+
   if (loading) {
     return (
       <div className="text-center py-20">
@@ -150,6 +246,11 @@ root.render(
         </Link>
       </div>
     );
+  }
+
+  // Set initial selected file
+  if (!selectedFile && mainFilename) {
+    setSelectedFile(mainFilename);
   }
 
   return (
@@ -213,7 +314,105 @@ root.render(
       {/* Content */}
       <div className="min-h-[500px]">
         {activeTab === "code" && (
-          <CodeBlock code={sandpackFiles[mainFilename] || "// No code available"} language="jsx" />
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            {/* Left Column: File Tree + Dependencies */}
+            <div className="lg:col-span-1 space-y-4">
+              {/* File Structure */}
+              <Card className="p-4">
+                <h3 className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
+                  <FolderTree size={16} />
+                  File Structure
+                </h3>
+                <div className="space-y-1">
+                  {renderFileTree(fileTree)}
+                </div>
+              </Card>
+
+              {/* Dependencies */}
+              {Object.keys(dependencies).length > 0 && (
+                <Card className="p-4">
+                  <h3 className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
+                    <PackageIcon size={16} />
+                    Dependencies
+                  </h3>
+                  <div className="space-y-2">
+                    {Object.entries(dependencies).map(([name, version]) => (
+                      <div key={name} className="flex justify-between items-center text-xs">
+                        <span className="text-white/70 font-mono">{name}</span>
+                        <Badge variant="secondary" className="text-xs">{version}</Badge>
+                      </div>
+                    ))}
+                  </div>
+                </Card>
+              )}
+            </div>
+
+            {/* Right Column: Code Viewer */}
+            <div className="lg:col-span-3 space-y-4">
+              <Card className="p-0 overflow-hidden">
+                <div className="bg-[#060010] px-4 py-3 border-b border-white/10 flex items-center justify-between">
+                  <span className="text-sm font-mono text-white/70">{selectedFile || mainFilename}</span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => {
+                      const code = sandpackFiles[selectedFile || mainFilename];
+                      if (code) navigator.clipboard.writeText(code);
+                    }}
+                  >
+                    <Copy size={14} className="mr-2" />
+                    Copy
+                  </Button>
+                </div>
+                <div className="max-h-[600px] overflow-auto">
+                  <CodeBlock 
+                    code={sandpackFiles[selectedFile || mainFilename] || "// No code available"} 
+                    language="jsx" 
+                  />
+                </div>
+              </Card>
+
+              {/* Installation Commands */}
+              <Card className="p-4">
+                <h3 className="text-sm font-semibold text-white mb-3">Installation</h3>
+                <div className="space-y-3">
+                  {/* NPM Install */}
+                  {Object.keys(dependencies).length > 0 && (
+                    <div>
+                      <p className="text-xs text-white/60 mb-2">Install dependencies:</p>
+                      <div className="relative group">
+                        <pre className="bg-black/40 rounded-lg p-3 text-xs font-mono text-white/80 overflow-x-auto">
+                          npm install {Object.keys(dependencies).join(' ')}
+                        </pre>
+                        <button
+                          onClick={() => navigator.clipboard.writeText(`npm install ${Object.keys(dependencies).join(' ')}`)}
+                          className="absolute right-2 top-2 p-1.5 rounded bg-[#060010] hover:bg-[#0a0018] opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          <Copy size={12} className="text-white" />
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Component Pull */}
+                  <div>
+                    <p className="text-xs text-white/60 mb-2">Pull component via CLI:</p>
+                    <div className="relative group">
+                      <pre className="bg-black/40 rounded-lg p-3 text-xs font-mono text-white/80 overflow-x-auto">
+                        composter pull {component.category?.name || 'category'} {component.title} ./
+                      </pre>
+                      <button
+                        onClick={() => navigator.clipboard.writeText(`composter pull ${component.category?.name || 'category'} ${component.title} ./`)}
+                        className="absolute right-2 top-2 p-1.5 rounded bg-white/10 hover:bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <Copy size={12} className="text-white" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            </div>
+          </div>
         )}
 
         {activeTab === "preview" && (
