@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { Box, Star } from "lucide-react";
+import { Box, Folder, ChevronRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Card from "../../components/ui/Card.jsx";
 
 const StatCard = ({ title, value, icon: Icon }) => (
   <Card className="h-full">
-    <div className="flex items-start justify-between mb-4">
+    <div className="flex items-start justify-between">
       <div>
-        <p className="text-white/60 text-sm font-medium mb-1">{title}</p>
-        <h3 className="text-2xl font-bold text-white">{value}</h3>
+        <p className="text-muted-foreground text-sm font-medium mb-1">{title}</p>
+        <h3 className="text-3xl font-semibold text-foreground">{value}</h3>
       </div>
-      <div className="p-2 rounded-lg bg-[#060010] text-white/80">
+      <div className="p-2.5 rounded-xl bg-primary/10 text-primary">
         <Icon size={20} />
       </div>
     </div>
@@ -93,44 +93,53 @@ const DashboardHome = () => {
     <div className="space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-white mb-2">Dashboard</h1>
-        <p className="text-white/60">Welcome back, here's what's happening with your components.</p>
+        <h1 className="text-3xl font-medium text-foreground mb-2">Dashboard</h1>
+        <p className="text-muted-foreground">Welcome back, here's what's happening with your components.</p>
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <StatCard title="Total Components" value={componentsCount} icon={Box} />
-        <StatCard title="Total Categories" value={categoriesCount} icon={Star} />
+        <StatCard title="Total Categories" value={categoriesCount} icon={Folder} />
       </div>
 
       {/* Recent Components */}
       <div>
-        <h2 className="text-xl font-semibold text-white mb-4">Recent Components</h2>
-        <div className="space-y-4">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-medium text-foreground">Recent Components</h2>
+          <button 
+            onClick={() => navigate('/app/components')}
+            className="text-sm text-primary hover:text-primary/80 transition-colors"
+          >
+            View all
+          </button>
+        </div>
+        <div className="space-y-3">
           {recentComponents.length === 0 ? (
             <Card>
-              <p className="text-white/50 text-center">No components yet. Create your first component!</p>
+              <p className="text-muted-foreground text-center py-4">No components yet. Create your first component!</p>
             </Card>
           ) : (
             recentComponents.map((comp) => (
               <Card 
                 key={comp.id} 
                 hoverEffect 
-                className="group cursor-pointer"
+                className="group"
                 onClick={() => navigate(`/app/components/${comp.id}`)}
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-violet-500/20 to-fuchsia-500/20 flex items-center justify-center text-violet-300">
-                      <Box size={20} />
+                    <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                      <Box size={18} />
                     </div>
                     <div>
-                      <h4 className="text-white font-medium group-hover:text-violet-400 transition-colors">{comp.title}</h4>
-                      <p className="text-xs text-white/50">{comp.category.name}</p>
+                      <h4 className="text-foreground font-medium group-hover:text-primary transition-colors">{comp.title}</h4>
+                      <p className="text-xs text-muted-foreground">{comp.category.name}</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-4">
-                    <span className="text-xs text-white/40">{formatTimeAgo(comp.createdAt)}</span>
+                  <div className="flex items-center gap-3">
+                    <span className="text-xs text-muted-foreground">{formatTimeAgo(comp.createdAt)}</span>
+                    <ChevronRight size={16} className="text-muted-foreground group-hover:text-primary transition-colors" />
                   </div>
                 </div>
               </Card>

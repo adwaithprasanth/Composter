@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import GlassSurface from "../../components/external/GlassSurface.jsx";
-import Button from "../../components/ui/Button.jsx";
-import Input from "../../components/ui/Input.jsx";
-import DarkVeil from "../../components/external/DarkVeil.jsx";
 import { signIn } from "../../lib/auth-client.ts";
+import { Button } from "@/components/ui/button";
+import logo from "@/assets/logo.png";
 
 const Login = () => {
     const navigate = useNavigate();
@@ -39,72 +37,89 @@ const Login = () => {
     };
 
     return (
-        <div className="w-screen h-screen font-[font] relative flex items-center justify-center overflow-hidden">
-            <DarkVeil />
+        <div className="min-h-screen w-full bg-background relative flex items-center justify-center overflow-hidden">
+            {/* Purple gradient background effects */}
+            <div 
+                aria-hidden 
+                className="absolute top-0 right-0 w-[40rem] h-[40rem] -translate-y-1/4 translate-x-1/4 rounded-full bg-[radial-gradient(circle,hsla(262,83%,58%,.15)_0%,transparent_70%)] pointer-events-none" 
+            />
+            <div 
+                aria-hidden 
+                className="absolute bottom-0 left-0 w-[35rem] h-[35rem] translate-y-1/4 -translate-x-1/4 rounded-full bg-[radial-gradient(circle,hsla(280,83%,58%,.12)_0%,transparent_70%)] pointer-events-none blur-2xl" 
+            />
+            <div 
+                aria-hidden 
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[50rem] h-[50rem] rounded-full bg-[radial-gradient(circle,hsla(262,83%,58%,.05)_0%,transparent_60%)] pointer-events-none" 
+            />
 
-            {/* Background Blobs - Optimized blur for better performance */}
-            <div className="absolute top-[-20%] right-[-10%] w-[600px] h-[600px] bg-violet-600/20 rounded-full blur-[40px] mix-blend-screen pointer-events-none" style={{ willChange: 'transform' }} />
-            <div className="absolute bottom-[-20%] left-[-10%] w-[500px] h-[500px] bg-fuchsia-600/10 rounded-full blur-[30px] mix-blend-screen pointer-events-none" style={{ willChange: 'transform' }} />
+            <div className="relative z-10 w-full max-w-md mx-4">
+                {/* Logo */}
+                <Link to="/" className="flex items-center justify-center gap-2 mb-8">
+                    <img src={logo} alt="Composter" className="h-10 w-10 object-contain" />
+                    <span className="text-2xl font-bold text-foreground">Composter</span>
+                </Link>
 
-            <GlassSurface
-                width={480}
-                height="auto"
-                borderRadius={24}
-                className="relative z-10 p-8"
-                mixBlendMode="normal"
-            >
-                <div className="w-full text-white">
+                {/* Card */}
+                <div className="bg-card/50 backdrop-blur-xl border border-border/50 rounded-2xl p-8 shadow-2xl shadow-black/20">
                     <div className="text-center mb-8">
-                        <h1 className="text-3xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-violet-400 to-fuchsia-400">
+                        <h1 className="text-4xl font-medium mb-3 text-balance">
                             Welcome Back
                         </h1>
-                        <p className="text-white/60">Enter your credentials to access your vault</p>
+                        <p className="text-muted-foreground text-balance">Enter your credentials to access your vault</p>
                         {error && (
-                            <p className="text-red-400 text-sm mt-2">{error}</p>
+                            <p className="text-red-400 text-sm mt-3 bg-red-500/10 border border-red-500/20 rounded-lg py-2 px-3">{error}</p>
                         )}
                     </div>
 
-                    <form onSubmit={handleSubmit} className="space-y-6">
-                        <Input
-                            id="email"
-                            type="email"
-                            label="Email Address"
-                            placeholder="you@example.com"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            required
-                        />
+                    <form onSubmit={handleSubmit} className="space-y-5">
+                        <div>
+                            <label htmlFor="email" className="block text-sm font-medium text-foreground/80 mb-2">
+                                Email Address
+                            </label>
+                            <input
+                                id="email"
+                                type="email"
+                                placeholder="you@example.com"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                required
+                                className="w-full px-4 py-3 rounded-xl bg-background/50 border border-border/50 text-foreground placeholder-muted-foreground/50 outline-none transition-all duration-200 focus:border-primary/50 focus:ring-2 focus:ring-primary/20 hover:border-border"
+                            />
+                        </div>
 
                         <div>
-                            <Input
+                            <label htmlFor="password" className="block text-sm font-medium text-foreground/80 mb-2">
+                                Password
+                            </label>
+                            <input
                                 id="password"
                                 type="password"
-                                label="Password"
                                 placeholder="••••••••"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 required
+                                className="w-full px-4 py-3 rounded-xl bg-background/50 border border-border/50 text-foreground placeholder-muted-foreground/50 outline-none transition-all duration-200 focus:border-primary/50 focus:ring-2 focus:ring-primary/20 hover:border-border"
                             />
                             <div className="flex justify-end mt-2">
-                                <Link to="/reset-password" class="text-xs text-violet-400 hover:text-violet-300 transition-colors">
+                                <Link to="/reset-password" className="text-xs text-primary hover:text-primary/80 transition-colors">
                                     Forgot password?
                                 </Link>
                             </div>
                         </div>
 
-                        <Button type="submit" width="100%" className="w-full mt-4" disabled={loading}>
+                        <Button type="submit" className="w-full h-12 text-base rounded-xl mt-2" disabled={loading}>
                             {loading ? "Signing in..." : "Sign In"}
                         </Button>
                     </form>
 
-                    <div className="mt-8 text-center text-sm text-white/60">
+                    <div className="mt-8 text-center text-sm text-muted-foreground">
                         Don't have an account?{" "}
-                        <Link to="/signup" className="text-violet-400 hover:text-violet-300 font-medium transition-colors">
+                        <Link to="/signup" className="text-primary hover:text-primary/80 font-medium transition-colors">
                             Sign up
                         </Link>
                     </div>
                 </div>
-            </GlassSurface>
+            </div>
         </div>
     );
 };

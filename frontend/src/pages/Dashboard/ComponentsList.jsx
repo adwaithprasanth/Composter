@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Search, Filter, Layers, Code2, Eye } from "lucide-react";
+import { Search, Filter, Layers, Code2, Eye, Plus } from "lucide-react";
 import { Link } from "react-router-dom";
 import Card from "../../components/ui/Card.jsx";
-import Button from "../../components/ui/Button.jsx";
+import { Button } from "@/components/ui/button";
 
 // --- SUB-COMPONENT: Simple card without live preview ---
 const ComponentCard = ({ comp, formatTimeAgo }) => {
@@ -19,12 +19,12 @@ const ComponentCard = ({ comp, formatTimeAgo }) => {
 
   return (
     <Link to={`/app/components/${comp.id}`}>
-      <Card hoverEffect className="h-full group cursor-pointer">
+      <Card hoverEffect className="h-full group">
         {/* Preview Area - Static Placeholder */}
-        <div className="aspect-video rounded-xl mb-4 overflow-hidden border border-white/5 bg-gradient-to-br from-[#151515] to-[#0a0018] flex items-center justify-center relative">
+        <div className="aspect-video rounded-lg mb-4 overflow-hidden border border-border/30 bg-zinc-950 flex items-center justify-center relative">
           <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAwIDEwIEwgNDAgMTAgTSAxMCAwIEwgMTAgNDAgTSAwIDIwIEwgNDAgMjAgTSAyMCAwIEwgMjAgNDAgTSAwIDMwIEwgNDAgMzAgTSAzMCAwIEwgMzAgNDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjAzKSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyaWQpIi8+PC9zdmc+')] opacity-50"></div>
-          <div className="relative z-10 flex flex-col items-center gap-2 text-white/40 group-hover:text-violet-400 transition-colors">
-            <Code2 size={32} strokeWidth={1.5} />
+          <div className="relative z-10 flex flex-col items-center gap-2 text-muted-foreground group-hover:text-primary transition-colors">
+            <Code2 size={28} strokeWidth={1.5} />
             <div className="flex items-center gap-1 text-xs">
               <Eye size={12} />
               <span>Click to preview</span>
@@ -33,22 +33,22 @@ const ComponentCard = ({ comp, formatTimeAgo }) => {
         </div>
 
         {/* Component Info */}
-        <div className="space-y-3">
-          <h3 className="text-lg font-semibold text-white group-hover:text-violet-400 transition-colors">
+        <div className="space-y-2">
+          <h3 className="font-medium text-foreground group-hover:text-primary transition-colors">
             {comp.title}
           </h3>
 
           <div className="flex items-center justify-between text-sm">
-            <span className="text-white/50">
+            <span className="text-muted-foreground text-xs">
               {comp.category?.name || "Uncategorized"}
             </span>
             <div className="flex items-center gap-3">
               {depsCount > 0 && (
-                <span className="flex items-center gap-1 text-xs text-white/40">
+                <span className="flex items-center gap-1 text-xs text-muted-foreground">
                   <Layers size={12} /> {depsCount}
                 </span>
               )}
-              <span className="text-white/40 text-xs">
+              <span className="text-muted-foreground/70 text-xs">
                 {formatTimeAgo(comp.createdAt)}
               </span>
             </div>
@@ -120,28 +120,29 @@ const ComponentsList = () => {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {/* Header & Controls */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-white mb-2">My Components</h1>
-          <p className="text-white/60">Manage and organize your component library</p>
+          <h1 className="text-3xl font-medium text-foreground mb-1">My Components</h1>
+          <p className="text-muted-foreground">Manage and organize your component library</p>
         </div>
-        <Link to="/app/upload">
-          <Button>
+        <Button asChild>
+          <Link to="/app/upload">
+            <Plus size={18} className="mr-2" />
             Upload Component
-          </Button>
-        </Link>
+          </Link>
+        </Button>
       </div>
 
       {/* Search Bar with Filter */}
-      <div className="flex items-center gap-4 bg-[#060010] p-2 rounded-2xl border border-white/10">
+      <div className="flex items-center gap-3 p-1.5 rounded-xl border border-border/30 bg-zinc-900/50">
         <div className="flex-1 relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40" size={18} />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
           <input
             type="text"
             placeholder="Search components..."
-            className="w-full bg-transparent border-none text-white placeholder-white/40 pl-10 pr-4 py-2 outline-none"
+            className="w-full bg-transparent border-none text-foreground placeholder-muted-foreground pl-10 pr-4 py-2 outline-none text-sm"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -149,30 +150,30 @@ const ComponentsList = () => {
         <div className="relative">
           <button
             onClick={() => setShowFilter(!showFilter)}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-colors ${
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors text-sm ${
               selectedCategory !== "all" 
-                ? "bg-violet-500/20 text-violet-300 border border-violet-500/30" 
-                : "bg-[#0a0018] text-white/70 hover:text-white border border-white/10"
+                ? "bg-primary/10 text-primary border border-primary/20" 
+                : "bg-zinc-800/50 text-muted-foreground hover:text-foreground border border-border/30"
             }`}
           >
-            <Filter size={18} />
-            <span className="text-sm font-medium">
+            <Filter size={16} />
+            <span className="font-medium">
               {selectedCategory === "all" ? "Filter" : selectedCategory}
             </span>
           </button>
           
           {/* Filter Dropdown */}
           {showFilter && (
-            <div className="absolute right-0 mt-2 w-56 bg-[#060010] border border-white/10 rounded-xl shadow-xl z-50 overflow-hidden">
+            <div className="absolute right-0 mt-2 w-56 bg-zinc-900 border border-border/50 rounded-xl shadow-xl z-50 overflow-hidden">
               <button
                 onClick={() => {
                   setSelectedCategory("all");
                   setShowFilter(false);
                 }}
-                className={`w-full px-4 py-3 text-left text-sm transition-colors ${
+                className={`w-full px-4 py-2.5 text-left text-sm transition-colors ${
                   selectedCategory === "all"
-                    ? "bg-violet-500/20 text-violet-300"
-                    : "text-white/70 hover:bg-[#0a0018] hover:text-white"
+                    ? "bg-primary/10 text-primary"
+                    : "text-muted-foreground hover:bg-zinc-800 hover:text-foreground"
                 }`}
               >
                 All Categories
@@ -184,10 +185,10 @@ const ComponentsList = () => {
                     setSelectedCategory(category.name);
                     setShowFilter(false);
                   }}
-                  className={`w-full px-4 py-3 text-left text-sm transition-colors ${
+                  className={`w-full px-4 py-2.5 text-left text-sm transition-colors ${
                     selectedCategory === category.name
-                      ? "bg-violet-500/20 text-violet-300"
-                      : "text-white/70 hover:bg-[#0a0018] hover:text-white"
+                      ? "bg-primary/10 text-primary"
+                      : "text-muted-foreground hover:bg-zinc-800 hover:text-foreground"
                   }`}
                 >
                   {category.name}
@@ -200,7 +201,7 @@ const ComponentsList = () => {
 
       {/* Grid */}
       {!loading && displayComponents.length > 0 && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {displayComponents.map((comp) => (
             <ComponentCard key={comp.id} comp={comp} formatTimeAgo={formatTimeAgo} />
           ))}
@@ -209,8 +210,9 @@ const ComponentsList = () => {
 
       {/* Empty State */}
       {!loading && displayComponents.length === 0 && (
-        <div className="text-center text-white/60 py-12">
-          {searchQuery ? "No components found matching your search" : "No components yet. Upload your first component!"}
+        <div className="text-center text-muted-foreground py-16">
+          <Code2 size={48} className="mx-auto mb-4 opacity-30" />
+          <p>{searchQuery ? "No components found matching your search" : "No components yet. Upload your first component!"}</p>
         </div>
       )}
     </div>

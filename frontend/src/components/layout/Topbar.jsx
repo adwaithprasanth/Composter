@@ -1,53 +1,56 @@
 import React from "react";
-import { LogOut, Book } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import { signOut, useSession } from "../../lib/auth-client.ts";
+import { Github, BookOpen } from "lucide-react";
+import { Link } from "react-router-dom";
+import { useSession } from "../../lib/auth-client.ts";
+import logo from "@/assets/logo.png";
 
 export default function Topbar() {
-    const navigate = useNavigate();
     const { data: session } = useSession();
 
-    const handleLogout = async () => {
-        await signOut();
-        navigate("/");
-    };
     return (
-        <div className="h-20 fixed top-0 right-0 left-64 z-30 p-4">
-            <div className="h-full bg-[#060010] border border-white/10 rounded-2xl">
-                <div className="flex items-center justify-end h-full px-6 text-white relative">
-                    {/* Actions */}
-                    <div className="flex items-center gap-4">
-                        <button
-                            onClick={() => navigate("/docs")}
-                            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#0a0018] text-white/70 hover:text-white border border-white/10 hover:border-violet-500/30 transition-colors"
-                            title="Documentation"
-                        >
-                            <Book size={18} />
-                            <span className="text-sm font-medium">Docs</span>
-                        </button>
+        <header className="h-14 sm:h-16 fixed top-0 right-0 left-0 lg:left-64 z-30 bg-[#09090b]/90 backdrop-blur-xl border-b border-border/20">
+            <div className="flex items-center justify-between h-full px-4 lg:px-6">
+                {/* Mobile Logo */}
+                <Link to="/" className="flex lg:hidden items-center gap-2">
+                    <img src={logo} alt="Composter" className="h-6 w-6 object-contain" />
+                    <span className="text-sm font-semibold text-foreground">Composter</span>
+                </Link>
 
-                        <div className="h-8 w-px bg-white/10"></div>
+                {/* Right Actions */}
+                <div className="flex items-center gap-2 sm:gap-4 ml-auto">
+                    {/* Docs link */}
+                    <Link 
+                        to="/docs"
+                        className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm text-muted-foreground hover:text-foreground hover:bg-zinc-800/50 transition-colors"
+                    >
+                        <BookOpen size={16} />
+                        <span>Docs</span>
+                    </Link>
 
-                        <div className="flex items-center gap-3">
-                            <div className="text-right hidden sm:block">
-                                <p className="text-sm font-medium text-white">{session?.user?.name || "User"}</p>
-                                <p className="text-xs text-white/50">{session?.user?.email || ""}</p>
-                            </div>
-                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center text-white font-bold shadow-lg shadow-violet-500/20">
-                                {session?.user?.name?.charAt(0)?.toUpperCase() || "U"}
-                            </div>
+                    <a 
+                        href="https://github.com" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-zinc-800/50 transition-colors"
+                        title="GitHub"
+                    >
+                        <Github size={18} />
+                    </a>
+
+                    <div className="hidden sm:block h-6 w-px bg-border/30" />
+
+                    {/* User Info */}
+                    <div className="flex items-center gap-2 sm:gap-3">
+                        <div className="hidden sm:block text-right">
+                            <p className="text-sm font-medium text-foreground">{session?.user?.name || "User"}</p>
+                            <p className="text-xs text-muted-foreground">{session?.user?.email || ""}</p>
                         </div>
-
-                        <button
-                            onClick={handleLogout}
-                            className="p-2 rounded-full hover:bg-red-500/10 text-white/70 hover:text-red-400 transition-colors"
-                            title="Logout"
-                        >
-                            <LogOut size={20} />
-                        </button>
+                        <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center text-white text-xs sm:text-sm font-semibold">
+                            {session?.user?.name?.charAt(0)?.toUpperCase() || "U"}
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </header>
     );
 }

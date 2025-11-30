@@ -1,10 +1,8 @@
 import React, { Suspense, lazy } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import DarkVeil from "../components/external/DarkVeil.jsx"; // Keep critical UI eager
 import ProtectedRoute from "../components/ProtectedRoute.jsx";
 
 // Lazy load pages for better performance
-// This splits the bundle so users only download what they need
 const LandingPage = lazy(() => import("../pages/LandingPage.jsx"));
 const Docs = lazy(() => import("../pages/Docs.jsx"));
 
@@ -20,11 +18,6 @@ const ComponentsList = lazy(() => import("../pages/Dashboard/ComponentsList.jsx"
 const ComponentDetail = lazy(() => import("../pages/Dashboard/ComponentDetail.jsx"));
 const UploadComponent = lazy(() => import("../pages/Dashboard/UploadComponent.jsx"));
 const Settings = lazy(() => import("../pages/Dashboard/Settings.jsx"));
-
-// Docs Pages
-const DocsLayout = lazy(() => import("../components/layout/DocsLayout.jsx"));
-const DocsContent = lazy(() => import("../pages/Docs/DocsContent.jsx"));
-const TerminalPage = lazy(() => import("../pages/Docs/TerminalPage.jsx"));
 
 // Simple loading state that matches the dark theme
 const PageLoader = () => (
@@ -62,13 +55,6 @@ const AppRouter = () => {
             <Route path="tags" element={<div className="text-white p-8">Tags Page (Coming Soon)</div>} />
           </Route>
 
-          {/* New Documentation Routes */}
-          <Route path="/dashboard/docs" element={<DocsLayout />}>
-            <Route index element={<DocsContent />} />
-            <Route path="terminal" element={<TerminalPage />} />
-            {/* Catch-all for other docs sections to render the main content */}
-            <Route path="*" element={<DocsContent />} />
-          </Route>
         </Routes>
       </Suspense>
     </BrowserRouter>

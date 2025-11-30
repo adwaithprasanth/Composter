@@ -1,60 +1,68 @@
 import React from "react";
-import { NavLink, Link } from "react-router-dom";
-import { Home, Box, Tag, Settings, LogOut } from "lucide-react";
+import { NavLink, Link, useNavigate } from "react-router-dom";
+import { Home, Box, Settings, LogOut } from "lucide-react";
+import { signOut } from "../../lib/auth-client.ts";
+import logo from "@/assets/logo.png";
 
 const Sidebar = () => {
-    // Our main navigation items.
-    // We might want to fetch these from a config later, but for now hardcoding is fine.
+    const navigate = useNavigate();
+
     const navItems = [
         { icon: Home, label: "Home", path: "/app" },
         { icon: Box, label: "My Components", path: "/app/components" },
-        
         { icon: Settings, label: "Settings", path: "/app/settings" },
     ];
 
+    const handleLogout = async () => {
+        await signOut();
+        navigate("/");
+    };
+
     return (
-        <div className="w-64 h-screen fixed left-0 top-0 p-4 z-40">
-            <div className="h-full bg-[#060010] border border-white/10 rounded-3xl">
-                <div className="flex flex-col h-full p-4 text-white relative">
-                    {/* Logo Area */}
-                    <Link to="/" className="block mb-8 px-2 hover:opacity-80 transition-opacity">
-                        <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-violet-400 to-fuchsia-400">
-                            Composter
-                        </h1>
-                        <p className="text-xs text-white/50">Developer Vault</p>
-                    </Link>
-
-                    {/* Main Navigation */}
-                    <nav className="flex-1 space-y-2">
-                        {navItems.map((item) => (
-                            <NavLink
-                                key={item.path}
-                                to={item.path}
-                                end={item.path === "/app"}
-                                className={({ isActive }) => `
-                  flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200
-                  ${isActive
-                                        ? "bg-[#0a0018] text-white shadow-lg shadow-violet-500/10"
-                                        : "text-white/60 hover:text-white hover:bg-[#060010]"
-                                    }
-                `}
-                            >
-                                <item.icon size={20} />
-                                <span className="text-sm font-medium">{item.label}</span>
-                            </NavLink>
-                        ))}
-                    </nav>
-
-                    {/* Footer Actions (Logout, etc.) */}
-                    <div className="mt-auto pt-4 border-t border-white/10">
-                        <button className="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-white/60 hover:text-red-400 hover:bg-red-500/10 transition-all duration-200">
-                            <LogOut size={20} />
-                            <span className="text-sm font-medium">Logout</span>
-                        </button>
+        <aside className="hidden lg:block w-64 h-screen fixed left-0 top-0 z-40 border-r border-border/30 bg-[#09090b]">
+            <div className="flex flex-col h-full py-6">
+                {/* Logo Area */}
+                <Link to="/" className="flex items-center gap-2.5 px-6 mb-8 hover:opacity-80 transition-opacity">
+                    <img src={logo} alt="Composter" className="h-8 w-8 object-contain" />
+                    <div>
+                        <h1 className="text-lg font-semibold text-foreground">Composter</h1>
+                        <p className="text-[10px] text-muted-foreground -mt-0.5">Developer Vault</p>
                     </div>
+                </Link>
+
+                {/* Main Navigation */}
+                <nav className="flex-1 px-3 space-y-1">
+                    {navItems.map((item) => (
+                        <NavLink
+                            key={item.path}
+                            to={item.path}
+                            end={item.path === "/app"}
+                            className={({ isActive }) => `
+                                flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-150
+                                ${isActive
+                                    ? "bg-primary/10 text-primary border-l-2 border-primary -ml-0.5 pl-[calc(1rem+2px)]"
+                                    : "text-muted-foreground hover:text-foreground hover:bg-zinc-800/50"
+                                }
+                            `}
+                        >
+                            <item.icon size={18} />
+                            <span className="text-sm font-medium">{item.label}</span>
+                        </NavLink>
+                    ))}
+                </nav>
+
+                {/* Footer Actions */}
+                <div className="px-3 pt-4 border-t border-border/30 mt-auto">
+                    <button 
+                        onClick={handleLogout}
+                        className="flex items-center gap-3 px-4 py-2.5 w-full rounded-xl text-muted-foreground hover:text-red-400 hover:bg-red-500/10 transition-all duration-150"
+                    >
+                        <LogOut size={18} />
+                        <span className="text-sm font-medium">Logout</span>
+                    </button>
                 </div>
             </div>
-        </div>
+        </aside>
     );
 };
 

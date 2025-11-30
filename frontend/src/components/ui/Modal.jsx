@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import GlassSurface from '../external/GlassSurface.jsx';
 import { X } from 'lucide-react';
 
 const Modal = ({
@@ -7,7 +6,7 @@ const Modal = ({
     onClose,
     children,
     title,
-    width = 520,
+    maxWidth = "520px",
     className = ""
 }) => {
     useEffect(() => {
@@ -25,31 +24,28 @@ const Modal = ({
         >
             {/* Backdrop */}
             <div
-                className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
+                className="absolute inset-0 bg-black/70 backdrop-blur-sm transition-opacity"
                 onClick={onClose}
             />
 
-            <GlassSurface
-                width={width}
-                height={'auto'}
-                borderRadius={24}
-                className={`relative z-10 max-w-full ${className}`}
-                mixBlendMode="normal"
+            <div 
+                className={`relative z-10 w-full bg-[#0d0d0d] border border-border/30 rounded-2xl shadow-2xl ${className}`}
+                style={{ maxWidth }}
             >
-                <div className="w-full p-6 text-white relative">
+                <div className="w-full p-6 text-foreground">
                     <div className="flex items-center justify-between mb-6">
                         {title && <h3 className="text-xl font-semibold">{title}</h3>}
                         <button
                             onClick={onClose}
-                            className="p-1 rounded-full hover:bg-white/10 transition-colors text-white/60 hover:text-white"
+                            className="p-1.5 rounded-lg hover:bg-zinc-800 transition-colors text-muted-foreground hover:text-foreground"
                         >
-                            <X size={20} />
+                            <X size={18} />
                         </button>
                     </div>
 
                     {children}
                 </div>
-            </GlassSurface>
+            </div>
         </div>
     );
 };

@@ -1,9 +1,7 @@
-
 import React, { useState, useEffect, useRef } from "react";
 import { User, Camera } from "lucide-react";
 import Card from "../../components/ui/Card.jsx";
-import Button from "../../components/ui/Button.jsx";
-import Input from "../../components/ui/Input.jsx";
+import { Button } from "@/components/ui/button";
 
 const Settings = () => {
     const [profile, setProfile] = useState({
@@ -72,36 +70,36 @@ const Settings = () => {
     if (loading) {
         return (
             <div className="flex items-center justify-center min-h-[400px]">
-                <div className="text-white/60">Loading...</div>
+                <div className="text-muted-foreground">Loading...</div>
             </div>
         );
     }
 
     return (
-        <div className="space-y-8">
+        <div className="space-y-6">
             <div>
-                <h1 className="text-3xl font-bold text-white mb-2">Settings</h1>
-                <p className="text-white/60">Manage your account preferences.</p>
+                <h1 className="text-3xl font-medium text-foreground mb-1">Settings</h1>
+                <p className="text-muted-foreground">Manage your account preferences.</p>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
                 {/* Sidebar Navigation */}
-                <div className="lg:col-span-1 space-y-2">
-                    <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all bg-[#060010] text-white font-medium">
+                <div className="lg:col-span-1 space-y-1">
+                    <button className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all bg-primary/10 text-primary border border-primary/20 font-medium text-sm">
                         <User size={18} />
                         Profile
                     </button>
                 </div>
 
                 {/* Main Content Area */}
-                <div className="lg:col-span-2">
-                    <Card className="p-8">
-                        <h2 className="text-xl font-semibold text-white mb-6">Profile Information</h2>
+                <div className="lg:col-span-3">
+                    <Card>
+                        <h2 className="text-lg font-medium text-foreground mb-6">Profile Information</h2>
 
                         {/* Avatar Section */}
                         <div className="flex items-center gap-6 mb-8">
                             <div className="relative group">
-                                <div className="w-20 h-20 rounded-full bg-linear-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center text-2xl font-bold text-white shadow-lg shadow-violet-500/30 overflow-hidden">
+                                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center text-2xl font-semibold text-white overflow-hidden">
                                     {formData.avatar ? (
                                         <img src={formData.avatar} alt="Profile" className="w-full h-full object-cover" />
                                     ) : (
@@ -126,29 +124,40 @@ const Settings = () => {
                                     accept="image/*"
                                     className="hidden"
                                 />
-                                <Button variant="secondary" className="mb-2" onClick={triggerFileInput}>
+                                <Button variant="outline" size="sm" className="mb-2" onClick={triggerFileInput}>
                                     Change Avatar
                                 </Button>
-                                <p className="text-xs text-white/40">JPG, GIF or PNG. Max size of 800K</p>
+                                <p className="text-xs text-muted-foreground">JPG, GIF or PNG. Max size of 800K</p>
                             </div>
                         </div>
 
                         {/* Profile Form */}
-                        <form className="space-y-6" onSubmit={handleSave}>
-                            <Input
-                                id="name"
-                                label="Name"
-                                value={formData.name}
-                                onChange={handleChange}
-                            />
+                        <form className="space-y-5" onSubmit={handleSave}>
+                            <div>
+                                <label htmlFor="name" className="block text-sm font-medium text-foreground/80 mb-2">
+                                    Name
+                                </label>
+                                <input
+                                    id="name"
+                                    type="text"
+                                    value={formData.name}
+                                    onChange={handleChange}
+                                    className="w-full px-4 py-2.5 rounded-xl bg-zinc-900/50 border border-border/50 text-foreground placeholder-muted-foreground outline-none transition-all focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
+                                />
+                            </div>
 
-                            <Input
-                                id="email"
-                                type="email"
-                                label="Email Address"
-                                value={formData.email}
-                                onChange={handleChange}
-                            />
+                            <div>
+                                <label htmlFor="email" className="block text-sm font-medium text-foreground/80 mb-2">
+                                    Email Address
+                                </label>
+                                <input
+                                    id="email"
+                                    type="email"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                    className="w-full px-4 py-2.5 rounded-xl bg-zinc-900/50 border border-border/50 text-foreground placeholder-muted-foreground outline-none transition-all focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
+                                />
+                            </div>
 
                             <div className="pt-4 flex justify-end">
                                 <Button type="submit">Save Changes</Button>

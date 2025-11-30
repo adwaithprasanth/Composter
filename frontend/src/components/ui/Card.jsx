@@ -1,4 +1,5 @@
 import React, { memo } from "react";
+import { cn } from "@/lib/utils";
 
 /**
  * Reusable Card component with solid background.
@@ -10,22 +11,23 @@ const Card = ({
     width = "100%",
     height = "auto",
     hoverEffect = false,
+    noPadding = false,
     ...props
 }) => {
     return (
         <div
-            className={`
-                bg-[#060010] border border-white/10 rounded-3xl
-                ${hoverEffect ? 'hover:scale-[1.02] hover:bg-[#0a0018] cursor-pointer transition-all duration-150' : ''}
-                ${className}
-            `}
+            className={cn(
+                "bg-zinc-900/50 border border-border/30 rounded-xl",
+                hoverEffect && "hover:border-border/50 hover:bg-zinc-900/70 cursor-pointer transition-all duration-150",
+                className
+            )}
             style={{
                 width: typeof width === 'number' ? `${width}px` : width,
                 height: typeof height === 'number' ? `${height}px` : height,
             }}
             {...props}
         >
-            <div className="w-full h-full p-6 relative">
+            <div className={cn("w-full h-full relative", !noPadding && "p-5")}>
                 {children}
             </div>
         </div>
