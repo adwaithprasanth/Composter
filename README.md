@@ -22,7 +22,8 @@
 </p>
 
 ---
-[Composter Landing Page](docs/screenshots/landing-page.png) 
+
+![Composter Landing Page](docs/screenshots/landing-page.png)
 
 ## ✨ Features
 
@@ -149,15 +150,13 @@ composter pull buttons "PrimaryButton" ./components/
 ```
 
 
-[CLI Usage](docs/screenshots/cli-usage.gif)
+![CLI Usage](docs/screenshots/cli-usage.gif)
 
 ### Web Dashboard
 
 Access the dashboard at `http://localhost:5173` after starting the frontend.
 
-
--->
-[Dashboard](docs/screenshots/dashboard.png)
+![Dashboard](docs/screenshots/dashboard.png)
 
 #### Dashboard Features
 
@@ -166,9 +165,7 @@ Access the dashboard at `http://localhost:5173` after starting the frontend.
 - **Code View** — Inspect source code with syntax highlighting
 - **Copy Commands** — One-click copy for npm install and CLI commands
 
-
--->
-[Component Detail](docs/screenshots/component-detail.png)
+![Component Detail](docs/screenshots/component-detail.png)
 
 ## 🤖 MCP Integration
 
@@ -224,8 +221,6 @@ Composter includes a Model Context Protocol (MCP) server that enables AI assista
 |------|-------------|
 | `search_components` | Search components by name or category |
 | `read_component` | Read the full source code of a component |
-
-
 
 For detailed MCP documentation, see [mcp/README.md](mcp/README.md).
 
@@ -349,7 +344,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 <p align="center">
   Made with ❤️ by <a href="https://github.com/binit2-1">binit2-1</a>
 </p>
-
----
-
-
