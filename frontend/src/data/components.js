@@ -175,9 +175,9 @@ const Hyperspeed = () => {
   return (
     <div className="w-full h-[400px] bg-black relative overflow-hidden">
       <div className="absolute inset-0 flex items-center justify-center">
-        <div className="w-[2px] h-[100px] bg-white/50 animate-ping absolute left-1/4 top-1/4" />
-        <div className="w-[2px] h-[150px] bg-white/30 animate-ping absolute right-1/3 top-1/2 delay-100" />
-        <div className="w-[2px] h-[80px] bg-white/70 animate-ping absolute left-1/2 bottom-1/4 delay-300" />
+        <div className="w-0.5 h-[100px] bg-white/50 animate-ping absolute left-1/4 top-1/4" />
+        <div className="w-0.5 h-[150px] bg-white/30 animate-ping absolute right-1/3 top-1/2 delay-100" />
+        <div className="w-0.5 h-20 bg-white/70 animate-ping absolute left-1/2 bottom-1/4 delay-300" />
         <h1 className="text-4xl font-bold text-white italic tracking-tighter z-10 mix-blend-difference">
           HYPERSPEED
         </h1>
@@ -203,11 +203,11 @@ const DecayCard = () => {
     <div className="group relative w-[300px] h-[400px] bg-[#0a0a0a] rounded-xl border border-white/10 overflow-hidden">
       <div className="absolute inset-0 bg-noise opacity-20" />
       <div className="p-8 relative z-10">
-        <h3 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-b from-white to-white/40 group-hover:blur-[2px] transition-all duration-500">
+        <h3 className="text-2xl font-bold text-transparent bg-clip-text bg-linear-to-b from-white to-white/40 group-hover:blur-[2px] transition-all duration-500">
           Decay
         </h3>
       </div>
-      <div className="absolute inset-0 bg-gradient-to-t from-violet-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+      <div className="absolute inset-0 bg-linear-to-t from-violet-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
     </div>
   );
 };
@@ -228,7 +228,7 @@ const VariableFont = () => {
   return (
     <div className="flex items-center justify-center h-[200px]">
       <h1 
-        className="text-6xl text-white cursor-default transition-all duration-500 hover:font-[900] hover:tracking-widest"
+        className="text-6xl text-white cursor-default transition-all duration-500 hover:font-black hover:tracking-widest"
         style={{ fontVariationSettings: '"wght" 100, "wdth" 85' }}
       >
         HOVER ME

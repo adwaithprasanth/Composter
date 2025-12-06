@@ -325,7 +325,7 @@ export function HeroSection() {
                             <div className="relative mt-8 overflow-hidden px-4 sm:px-2 sm:mt-12 md:mt-20">
                                 <div
                                     aria-hidden
-                                    className="bg-gradient-to-b to-background absolute inset-0 z-10 from-transparent from-35%"
+                                    className="bg-linear-to-b to-background absolute inset-0 z-10 from-transparent from-35%"
                                 />
                                 <div className="bg-background relative mx-auto max-w-5xl overflow-hidden rounded-2xl border border-border/50 p-3 sm:p-4 shadow-lg shadow-zinc-950/15">
                                     <img
@@ -347,7 +347,7 @@ export function HeroSection() {
                             <div className="space-y-6">
                                 <h2 className="text-4xl sm:text-5xl md:text-6xl font-medium text-foreground">
                                     Instant<br />
-                                    <span className="bg-gradient-to-r from-purple-400 via-violet-400 to-purple-400 bg-clip-text text-transparent">
+                                    <span className="bg-linear-to-r from-purple-400 via-violet-400 to-purple-400 bg-clip-text text-transparent">
                                         Provisioning
                                     </span>
                                 </h2>
@@ -362,7 +362,7 @@ export function HeroSection() {
                                     Provisioned in <span className="text-emerald-400 font-medium">300ms</span>
                                 </p>
                                 <CopyCommand command="npm install -g composter-cli" />
-                                <div className="h-px w-full bg-gradient-to-r from-transparent via-border/50 to-transparent" />
+                                <div className="h-px w-full bg-linear-to-r from-transparent via-border/50 to-transparent" />
                             </div>
                         </div>
                     </div>
@@ -374,7 +374,7 @@ export function HeroSection() {
                         <div className="text-center mb-12 md:mb-16">
                             <h2 className="text-3xl sm:text-4xl md:text-5xl font-medium text-foreground mb-4">
                                 Works With Your
-                                <span className="block bg-gradient-to-r from-purple-400 via-violet-400 to-purple-400 bg-clip-text text-transparent">
+                                <span className="block bg-linear-to-r from-purple-400 via-violet-400 to-purple-400 bg-clip-text text-transparent">
                                     Favorite Tools
                                 </span>
                             </h2>
@@ -394,10 +394,8 @@ export function HeroSection() {
 }
 
 const menuItems = [
-    { name: 'Features', href: '#features' },
     { name: 'Docs', href: '/docs' },
     { name: 'Dashboard', href: '/app' },
-    { name: 'About', href: '#about' },
 ]
 
 const HeroHeader = () => {
