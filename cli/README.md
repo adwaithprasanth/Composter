@@ -4,44 +4,527 @@
 
 [![npm version](https://img.shields.io/npm/v/composter-cli.svg)](https://www.npmjs.com/package/composter-cli)
 [![license](https://img.shields.io/npm/l/composter-cli.svg)](https://github.com/binit2-1/Composter/blob/main/LICENSE)
+[![node](https://img.shields.io/node/v/composter-cli.svg)](https://nodejs.org)
 
 **Composter** is like your personal shadcn/ui — but for YOUR components. Push components from any project, pull them into new ones, and let AI assistants access your vault via MCP.
 
+---
+
+## 🎯 Why Composter?
+
+Ever built an amazing component and wanted to reuse it in another project? Tired of copy-pasting files and forgetting dependencies? Composter solves this:
+
+- **No more copy-paste chaos** — Push once, pull anywhere
+- **Dependencies tracked automatically** — Never forget to install packages again
+- **Smart bundling** — Relative imports are bundled, npm packages are tracked
+- **AI-ready** — Let Claude, Cursor, or Copilot access your vault via MCP
+- **Private by default** — Your components, your vault, your control
+
+---
+
 ## ✨ Features
 
-- **📤 Push** — Upload components with all their local dependencies auto-bundled
-- **📥 Pull** — Download components into any project with dependency detection
-- **📁 Categories** — Organize components into logical groups
-- **🔗 Smart Bundling** — Automatically crawls and bundles relative imports
-- **📦 Dependency Tracking** — Detects npm packages and alerts you to missing ones
-- **🤖 MCP Ready** — Works with Claude, Cursor, and other AI assistants
+| Feature | Description |
+|---------|-------------|
+| 📤 **Push** | Upload components with all local dependencies auto-bundled |
+| 📥 **Pull** | Download components with original folder structure preserved |
+| 📁 **Categories** | Organize components into logical groups (UI, Hooks, Utils) |
+| 🔗 **Smart Bundling** | Automatically crawls `./` and `@/` imports |
+| 📦 **Dependency Detection** | Reads your `package.json` and tracks npm packages |
+| ⚠️ **Missing Dep Alerts** | Tells you exactly what to `npm install` after pulling |
+| 🤖 **MCP Integration** | Works with AI assistants via Model Context Protocol |
+
+---
 
 ## 📦 Installation
 
-npm install -g composter-cli## 🚀 Quick Start
+### Global Install (Recommended)
 
-# 1. Create an account at https://composter.vercel.app
+```bash
+npm install -g composter-cli
+```
 
-# 2. Login to your vault
+### Using npx
+
+```bash
+npx composter-cli login
+```
+
+### Verify Installation
+
+```bash
+composter --version
+```
+
+---
+
+## 🚀 Quick Start
+
+### 1. Create an Account
+
+Visit **[composter.vercel.app](https://composter.vercel.app)** and sign up.
+
+### 2. Login via CLI
+
+```bash
 composter login
+```
 
-# 3. Create a category
-composter mkcat buttons
+```
+=== Composter Login ===
+? Email: you@example.com
+? Password: ********
 
-# 4. Push a component
-composter push buttons "Animated Button" ./src/components/Button.tsx
+Logged in successfully!
+Session expires: 2025-01-09T12:00:00.000Z
+```
 
-# 5. Pull it in another project
-composter pull buttons "Animated Button" ./src/components/## 📖 Commands
+### 3. Create a Category
 
-| Command | Description |
+```bash
+composter mkcat ui
+```
+
+### 4. Push Your First Component
+
+```bash
+composter push ui "Fancy Button" ./src/components/FancyButton.tsx
+```
+
+```
+Scanning FancyButton.tsx and its dependencies...
+📦 Bundled 3 file(s) and detected 2 external package(s).
+✅ Success! Component 'Fancy Button' pushed to 'ui'.
+```
+
+### 5. Pull It In Another Project
+
+```bash
+composter pull ui "Fancy Button" ./src/components/
+```
+
+```
+⏳ Fetching 'Fancy Button' from 'ui'...
+📦 Unpacking 3 file(s) into: /Users/you/new-project/src/components
+   + FancyButton.tsx
+   + FancyButton.module.css
+   + useButtonAnimation.ts
+
+⚠️  Missing Dependencies (Run this to fix):
+   npm install framer-motion clsx
+
+✅ Component 'Fancy Button' pulled successfully!
+```
+
+---
+
+## 📖 Commands Reference
+
+### `composter login`
+
+Authenticate with your Composter account.
+
+```bash
+composter login
+```
+
+**What happens:**
+- Prompts for email and password
+- Creates a JWT session token
+- Stores session at `~/.config/composter/session.json`
+- Session lasts 30 days
+
+---
+
+### `composter mkcat <category-name>`
+
+Create a new category to organize your components.
+
+```bash
+composter mkcat hooks
+```
+
+**Output:**
+```
+Category 'hooks' created successfully!
+ID: clx1234567890
+```
+
+**Rules:**
+| Rule | Example |
+|------|---------|
+| No spaces | ❌ `my buttons` → ✅ `buttons` |
+| Max 10 characters | ❌ `superlongname` → ✅ `utils` |
+| Unique per user | Each category name must be unique |
+
+---
+
+### `composter ls`
+
+List all your categories.
+
+```bash
+composter ls
+```
+
+**Output:**
+```
+ui          hooks       utils       layouts     forms
+```
+
+---
+
+### `composter push <category> <title> <file-path>`
+
+Push a component to your vault.
+
+```bash
+composter push ui "Data Table" ./src/components/DataTable/index.tsx
+```
+
+**Arguments:**
+
+| Argument | Description | Example |
+|----------|-------------|---------|
+| `category` | Target category name | `ui` |
+| `title` | Human-readable component name | `"Data Table"` |
+| `file-path` | Entry file path | `./src/components/DataTable.tsx` |
+
+**What gets bundled:**
+```
+Your Entry File
+│
+├── ./relative/imports      → ✅ Bundled into package
+├── @/alias/imports         → ✅ Bundled (assumes @/ = src/)
+├── ./styles.css            → ✅ Bundled
+│
+└── External packages       → 📦 Tracked as dependencies
+    ├── react               
+    ├── framer-motion       
+    └── @tanstack/react-table
+```
+
+**Example Output:**
+```
+Scanning DataTable.tsx and its dependencies...
+📦 Bundled 5 file(s) and detected 4 external package(s).
+✅ Success! Component 'Data Table' pushed to 'ui'.
+```
+
+---
+
+### `composter pull <category> <title> <target-directory>`
+
+Pull a component from your vault.
+
+```bash
+composter pull ui "Data Table" ./src/components/
+```
+
+**Arguments:**
+
+| Argument | Description | Example |
+|----------|-------------|---------|
+| `category` | Source category name | `ui` |
+| `title` | Component name to pull | `"Data Table"` |
+| `target-directory` | Where to save files | `./src/components/` |
+
+**What happens:**
+1. Fetches component bundle from your vault
+2. Recreates original folder structure
+3. Writes all files to target directory
+4. Checks your `package.json` for missing dependencies
+5. Suggests `npm install` command if needed
+
+**Example Output:**
+```
+⏳ Fetching 'Data Table' from 'ui'...
+📦 Unpacking 5 file(s) into: /Users/you/project/src/components
+   + DataTable/index.tsx
+   + DataTable/DataTableHeader.tsx
+   + DataTable/DataTableRow.tsx
+   + DataTable/DataTablePagination.tsx
+   + DataTable/data-table.css
+
+⚠️  Missing Dependencies (Run this to fix):
+   npm install @tanstack/react-table lucide-react
+
+✅ Component 'Data Table' pulled successfully!
+```
+
+---
+
+## 🔧 How Smart Bundling Works
+
+When you push a component, the CLI performs intelligent dependency crawling:
+
+### Import Resolution
+
+```tsx
+// Entry: src/components/Button.tsx
+
+import { cn } from "@/lib/utils"           // ✅ Bundled (alias import)
+import { useToggle } from "./hooks/toggle" // ✅ Bundled (relative import)
+import "./button.css"                       // ✅ Bundled (CSS import)
+import { motion } from "framer-motion"      // 📦 Tracked as npm dependency
+import React from "react"                   // 📦 Tracked as npm dependency
+```
+
+### Alias Support
+
+The `@/` alias is automatically resolved to your `src/` directory:
+
+```
+@/components/Button  →  src/components/Button
+@/lib/utils          →  src/lib/utils
+@/hooks/useAuth      →  src/hooks/useAuth
+```
+
+### File Extensions
+
+The crawler automatically resolves these extensions:
+
+```
+import { Button } from "./Button"
+                           ↓
+Tries: Button.tsx → Button.ts → Button.jsx → Button.js → Button/index.tsx
+```
+
+### Package Version Detection
+
+npm dependencies are tracked with versions from your `package.json`:
+
+```json
+// Your package.json
+{
+  "dependencies": {
+    "framer-motion": "^10.16.0",
+    "clsx": "^2.0.0"
+  }
+}
+
+// Stored with component
+{
+  "framer-motion": "^10.16.0",
+  "clsx": "^2.0.0"
+}
+```
+
+---
+
+## 🤖 AI Integration (MCP)
+
+Composter includes a Model Context Protocol (MCP) server that lets AI assistants interact with your vault.
+
+### Supported Assistants
+
+- **Claude Desktop** — Full MCP support
+- **Cursor** — Native MCP integration
+- **VS Code + Copilot** — Via MCP extension
+
+### What AI Can Do
+
+| Tool | Description |
+|------|-------------|
+| `search_components` | Search your vault by name or category |
+| `read_component` | Read full source code of any component |
+
+### Setup Example (Claude Desktop)
+
+Add to `~/.config/claude/claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "composter": {
+      "command": "node",
+      "args": ["/path/to/Composter/mcp/src/server.js"],
+      "cwd": "/path/to/Composter"
+    }
+  }
+}
+```
+
+📖 [Full MCP Documentation](https://github.com/binit2-1/Composter/tree/main/mcp)
+
+---
+
+## 📂 File Locations
+
+| File | Location | Purpose |
+|------|----------|---------|
+| Session | `~/.config/composter/session.json` | JWT auth token |
+| Config Dir | `~/.config/composter/` | All CLI data |
+
+### Session File Structure
+
+```json
+{
+  "jwt": "eyJhbGciOiJSUzI1NiIs...",
+  "cookies": "session_token=...",
+  "createdAt": "2024-12-10T10:00:00.000Z",
+  "expiresAt": "2025-01-09T10:00:00.000Z"
+}
+```
+
+---
+
+## 🐛 Troubleshooting
+
+### "You must be logged in"
+
+Your session doesn't exist or has expired.
+
+```bash
+composter login
+```
+
+### "Session expired"
+
+Sessions last 30 days. Re-authenticate:
+
+```bash
+composter login
+```
+
+### "Invalid category name"
+
+Category names have strict rules:
+
+```bash
+# ❌ These will fail
+composter mkcat "My Components"    # No spaces
+composter mkcat verylongcatname    # Max 10 chars
+
+# ✅ These work
+composter mkcat ui
+composter mkcat hooks
+composter mkcat utils
+```
+
+### "File not found" when pushing
+
+Check your file path:
+
+```bash
+# Make sure you're in the right directory
+pwd
+
+# Use relative path from current directory
+composter push ui "Button" ./src/components/Button.tsx
+
+# Or use absolute path
+composter push ui "Button" /Users/me/project/src/components/Button.tsx
+```
+
+### "Component not found" when pulling
+
+- Check the exact component title (case-sensitive)
+- Verify the category name
+- List your components on the web dashboard
+
+### Missing dependencies after pull
+
+The CLI tells you what's missing. Just run:
+
+```bash
+npm install package1 package2 package3
+```
+
+### Network errors
+
+- Check your internet connection
+- Verify the backend is accessible: `https://composter.onrender.com/api/health`
+- Try logging in again
+
+---
+
+## 🌐 Web Dashboard
+
+Manage your components visually at **[composter.vercel.app](https://composter.vercel.app)**
+
+- 📋 Browse all components
+- 👁️ Live code preview with Sandpack
+- ✏️ Edit component metadata
+- 📊 View dependency graphs
+- 📋 Copy code snippets
+- 🗑️ Delete components
+
+---
+
+## 🔒 Security
+
+| Feature | Description |
 |---------|-------------|
-| `composter login` | Authenticate with your account |
-| `composter mkcat <name>` | Create a new category |
-| `composter ls` | List all categories |
-| `composter push <category> <title> <file>` | Push a component |
-| `composter pull <category> <title> <dir>` | Pull a component |
+| 🔐 JWT Auth | Secure token-based authentication |
+| 🏠 Local Storage | Tokens stored locally, never shared |
+| 🔒 User Isolation | Each vault is completely private |
+| 🌐 HTTPS | All API traffic encrypted |
+| ⏰ Expiring Sessions | 30-day token lifetime |
 
-## 🔧 Smart Bundling
+---
 
-When you push, the CLI automatically bundles all local imports:
+## 📋 Examples
+
+### Push a Shadcn-style Component
+
+```bash
+# Push a button with all its dependencies
+composter push ui "Shadcn Button" ./src/components/ui/button.tsx
+```
+
+### Push a Custom Hook
+
+```bash
+composter push hooks "useLocalStorage" ./src/hooks/useLocalStorage.ts
+```
+
+### Push a Full Feature
+
+```bash
+# Push a data table that imports multiple files
+composter push features "User Table" ./src/features/users/UserTable.tsx
+```
+
+### Pull Into a New Project
+
+```bash
+# Create components folder if needed
+mkdir -p src/components
+
+# Pull your button
+composter pull ui "Shadcn Button" ./src/components/ui/
+
+# Install any missing deps
+npm install
+```
+
+---
+
+## 🔗 Links
+
+| Resource | URL |
+|----------|-----|
+| 🌐 Web App | [composter.vercel.app](https://composter.vercel.app) |
+| 📦 npm | [npmjs.com/package/composter-cli](https://www.npmjs.com/package/composter-cli) |
+| 💻 GitHub | [github.com/binit2-1/Composter](https://github.com/binit2-1/Composter) |
+| 🐛 Issues | [Report a bug](https://github.com/binit2-1/Composter/issues) |
+| 🤖 MCP Docs | [MCP Setup Guide](https://github.com/binit2-1/Composter/tree/main/mcp) |
+
+---
+
+## 🤝 Contributing
+
+Contributions welcome! See [CONTRIBUTING.md](https://github.com/binit2-1/Composter/blob/main/CONTRIBUTING.md)
+
+---
+
+## 📄 License
+
+MIT © [binit2-1](https://github.com/binit2-1)
+
+---
+
+<p align="center">
+  <b>Built with ❤️ for developers who hate copy-pasting components</b>
+</p>
