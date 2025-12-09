@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { signUp } from "../../lib/auth-client.ts";
+import { signUp } from "../../lib/auth-client";
 import { Button } from "@/components/ui/button";
 import logo from "@/assets/composter-logos/full_logo.png";
 

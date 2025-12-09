@@ -1,5 +1,5 @@
 import { Navigate } from "react-router-dom";
-import { useSession } from "../lib/auth-client.ts";
+import { useSession } from "../lib/auth-client";
 import ComposterLoading from "./ui/ComposterLoading.jsx";
 
 export default function ProtectedRoute({ children }) {

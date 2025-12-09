@@ -1,4 +1,4 @@
-import { authClient } from "../lib/auth-client.ts";
+import { authClient } from "./auth-client";
 
 export async function fetchUser() {
   const { data, error } = await authClient.getSession();

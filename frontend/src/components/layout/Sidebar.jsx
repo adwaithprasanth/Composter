@@ -1,7 +1,7 @@
 import React from "react";
 import { NavLink, Link, useNavigate } from "react-router-dom";
 import { Home, Box, Settings, LogOut } from "lucide-react";
-import { signOut } from "../../lib/auth-client.ts";
+import { signOut } from "../../lib/auth-client";
 import ComposterHover from "@/components/ui/ComposterHover";
 
 const Sidebar = () => {

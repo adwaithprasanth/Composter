@@ -1,7 +1,7 @@
 import React from "react";
 import { Github, BookOpen } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useSession } from "../../lib/auth-client.ts";
+import { useSession } from "../../lib/auth-client";
 import ComposterHover from "@/components/ui/ComposterHover";
 
 export default function Topbar() {

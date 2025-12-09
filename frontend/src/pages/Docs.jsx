@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Github, Copy, Check, Terminal, FileCode, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { authClient } from "@/lib/auth-client.ts";
+import { authClient } from "@/lib/auth-client";
 import { sidebarNav, docsContent, ctaSection } from "@/data/docsContent";
 import ComposterHover from "@/components/ui/ComposterHover";
 
