@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "composter": {
+      "command": "npx",
+      "args": [
+        "composter-mcp"
+      ]
+    }
+  }
+}

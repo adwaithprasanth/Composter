@@ -21,6 +21,83 @@ async function apiRequest(path, options = {}) {
   return res;
 }
 
+// Shared helpers
+async function fetchCategories() {
+  const res = await apiRequest("/categories", { method: "GET" });
+  if (!res.ok) {
+    const error = await res.json().catch(() => ({}));
+    throw new Error(error.message || error.error || res.statusText);
+  }
+  const data = await res.json();
+  return data.categories || [];
+}
+
+async function fetchComponentsByCategory(category) {
+  const res = await apiRequest(`/components/list-by-category?category=${encodeURIComponent(category)}`, { method: "GET" });
+  if (res.status === 404) throw new Error(`Category "${category}" not found.`);
+  if (!res.ok) {
+    const error = await res.json().catch(() => ({}));
+    throw new Error(error.message || error.error || res.statusText);
+  }
+  const data = await res.json();
+  return data.components || [];
+}
+
+async function fetchComponent(category, title) {
+  const res = await apiRequest(
+    `/components?category=${encodeURIComponent(category)}&title=${encodeURIComponent(title)}`,
+    { method: "GET" }
+  );
+  if (res.status === 404) throw new Error(`Component "${title}" not found in category "${category}".`);
+  if (!res.ok) {
+    const error = await res.json().catch(() => ({}));
+    throw new Error(error.message || error.error || res.statusText);
+  }
+  const data = await res.json();
+  return data.component;
+}
+
+async function searchComponents(query) {
+  const res = await apiRequest(`/components/search?q=${encodeURIComponent(query)}`, { method: "GET" });
+  if (!res.ok) {
+    const error = await res.json().catch(() => ({}));
+    throw new Error(error.message || error.error || res.statusText);
+  }
+  const data = await res.json();
+  return data.components || [];
+}
+
+function renderComponent(category, component) {
+  if (!component) return "Component not found.";
+
+  let codeOutput = "";
+  try {
+    const files = JSON.parse(component.code);
+    codeOutput = Object.entries(files)
+      .map(([path, content]) => `### ${path}\n\`\`\`tsx\n${content}\n\`\`\``)
+      .join("\n\n");
+  } catch {
+    codeOutput = `\`\`\`tsx\n${component.code}\n\`\`\``;
+  }
+
+  let depsOutput = "";
+  if (component.dependencies && Object.keys(component.dependencies).length > 0) {
+    const deps = Object.entries(component.dependencies)
+      .map(([pkg, ver]) => `- ${pkg}: ${ver}`)
+      .join("\n");
+    depsOutput = `\n\n**Dependencies:**\n${deps}`;
+  }
+
+  return `# ${component.title}
+
+**Category:** ${category}
+**Created:** ${new Date(component.createdAt).toLocaleDateString()}${depsOutput}
+
+## Source Code
+
+${codeOutput}`;
+}
+
 export function createMcpServer() {
   const server = new McpServer({
     name: "Composter",
@@ -30,7 +107,7 @@ export function createMcpServer() {
   // Tool: Search components
   server.tool(
     "search_components",
-    "Search for React components in your Composter vault by title or category name. Returns matching components with IDs and categories.",
+    "Search vault components by name or topic. Triggers on queries like 'find button components', 'search cards', 'look up forms'. Returns matches with IDs and categories.",
     {
       query: z.string().describe("Search term for component title or category name"),
     },
@@ -69,10 +146,85 @@ export function createMcpServer() {
     }
   );
 
+  // Tool: Natural language helper (catch-all)
+  server.tool(
+    "ask_composter",
+    "Ask in plain English to list categories, show components in a category, search components, or read a component (e.g., 'list categories', 'show components in ui', 'read Simple Card from ui', 'find button components').",
+    {
+      query: z.string().describe("e.g. 'list categories', 'show components in ui', 'read Simple Card from ui', 'find button components'"),
+    },
+    async ({ query }) => {
+      const q = query.trim();
+      const qLower = q.toLowerCase();
+      const respond = (text) => ({ content: [{ type: "text", text }] });
+
+      try {
+        // List categories
+        if (/\b(list|show|what)\b.*\bcategories\b/.test(qLower)) {
+          const categories = await fetchCategories();
+          if (!categories.length) return respond("No categories found. Create one with 'composter mkcat <name>'.");
+          const formatted = categories.map((c) => `- ${c.name}`).join("\n");
+          return respond(`Your categories:\n\n${formatted}`);
+        }
+
+        // List components in a category
+        const listCatMatch = qLower.match(/(?:list|show|what).*(?:components|items).*(?:in|for)\s+([a-z0-9_-]+)/);
+        if (listCatMatch) {
+          const cat = listCatMatch[1];
+          const components = await fetchComponentsByCategory(cat);
+          if (!components.length) return respond(`No components found in category "${cat}".`);
+          const formatted = components
+            .map((c) => `- ${c.title} (created: ${new Date(c.createdAt).toLocaleDateString()})`)
+            .join("\n");
+          return respond(`Components in "${cat}":\n\n${formatted}`);
+        }
+
+        // Read component with optional category
+        const readMatch = q.match(/(?:read|show|get|open|fetch)\s+(.+?)(?:\s+from\s+([a-z0-9_-]+))?$/i);
+        if (readMatch) {
+          const titleRaw = readMatch[1].trim();
+          const categoryRaw = readMatch[2]?.trim();
+
+          if (!categoryRaw) {
+            const hits = await searchComponents(titleRaw);
+            if (!hits.length) return respond(`No components found matching "${titleRaw}".`);
+            if (hits.length > 1) {
+              const list = hits
+                .slice(0, 5)
+                .map((c) => `- ${c.title} (category: ${c.category?.name || "unknown"})`)
+                .join("\n");
+              return respond(
+                `Found multiple components matching "${titleRaw}". Please specify a category:\n\n${list}${
+                  hits.length > 5 ? "\n(and more...)" : ""
+                }`
+              );
+            }
+            const hit = hits[0];
+            const comp = await fetchComponent(hit.category?.name, hit.title);
+            return respond(renderComponent(hit.category?.name, comp));
+          }
+
+          const comp = await fetchComponent(categoryRaw, titleRaw);
+          return respond(renderComponent(categoryRaw, comp));
+        }
+
+        // Fallback: search
+        const hits = await searchComponents(q);
+        if (!hits.length) return respond("No components found matching that query.");
+        const formatted = hits
+          .map((c) => `- **${c.title}** (Category: ${c.category?.name || "unknown"}) [ID: ${c.id}]`)
+          .join("\n");
+        return respond(`Found ${hits.length} component(s):\n\n${formatted}`);
+      } catch (err) {
+        return respond(`Error: ${err.message}`);
+      }
+    }
+  );
+
   // Tool: List categories
   server.tool(
     "list_categories",
-    "List all categories in your Composter vault.",
+    "List all categories in the vault. Trigger when user asks 'what categories do I have', 'show my categories', 'list vault categories'.",
     {},
     async () => {
       try {
@@ -110,7 +262,7 @@ export function createMcpServer() {
   // Tool: List components in category
   server.tool(
     "list_components",
-    "List all components in a specific category.",
+    "List components inside a given category. Trigger on requests like 'show components in ui', 'what's in forms', 'list items in buttons'.",
     {
       category: z.string().describe("The category name to list components from"),
     },
@@ -158,7 +310,7 @@ export function createMcpServer() {
   // Tool: Read component
   server.tool(
     "read_component",
-    "Read the full source code of a React component from your vault. Returns the code, category, dependencies, and creation date.",
+    "Read a component's full source. Trigger on 'read/open/show/get <component> from <category>' or similar. Returns code, category, dependencies, and creation date.",
     {
       category: z.string().describe("The category name the component belongs to"),
       title: z.string().describe("The title/name of the component to read"),
