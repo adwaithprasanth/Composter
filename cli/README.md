@@ -316,37 +316,23 @@ npm dependencies are tracked with versions from your `package.json`:
 
 Let AI assistants like **Claude**, **Cursor**, and **GitHub Copilot** access your vault via MCP.
 
-### Install MCP Server
+### One-Command Setup
 
 ```bash
-npm install -g composter-mcp
+# For Claude Desktop
+npx composter-mcp init claude
+
+# For Cursor
+npx composter-mcp init cursor
+
+# For VS Code (Copilot)
+npx composter-mcp init vscode
+
+# For Windsurf
+npx composter-mcp init windsurf
 ```
 
-### Configure Your AI Assistant
-
-**Claude Desktop** — Add to `~/.config/claude/claude_desktop_config.json`:
-
-```json
-{
-  "mcpServers": {
-    "composter": {
-      "command": "npx",
-      "args": ["composter-mcp"]
-    }
-  }
-}
-```
-
-**Cursor** — Add to `.cursor/mcp.json`:
-
-```json
-{
-  "composter": {
-    "command": "npx",
-    "args": ["composter-mcp"]
-  }
-}
-```
+Then restart your AI assistant — done!
 
 ### Available AI Tools
 
