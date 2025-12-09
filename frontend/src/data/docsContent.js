@@ -245,37 +245,71 @@ composter list buttons`,
         code: "composter login",
       },
       {
-        title: "Start MCP Server",
-        description: "Navigate to the mcp directory and start the server.",
-        code: "cd mcp && npm start",
+        title: "Auto-Configure (Recommended)",
+        description: "Use the init command to automatically set up MCP for your AI tool.",
+        code: `# For Claude Desktop
+npx composter-mcp init claude
+
+# For Cursor
+npx composter-mcp init cursor
+
+# For VS Code (Copilot)
+npx composter-mcp init vscode
+
+# For Windsurf
+npx composter-mcp init windsurf`,
       },
       {
-        title: "Configure Your AI Tool",
-        description: "Add Composter to your AI assistant's MCP configuration.",
+        title: "Restart Your AI Assistant",
+        description: "Close and reopen your AI assistant to apply the configuration.",
       },
     ],
     configs: [
       {
         title: "Claude Desktop",
-        path: "~/.config/claude/claude_desktop_config.json",
+        path: "~/.config/claude/claude_desktop_config.json (Linux) or ~/Library/Application Support/Claude/ (macOS)",
         code: `{
   "mcpServers": {
     "composter": {
-      "command": "node",
-      "args": ["/path/to/Composter/mcp/src/server.js"],
-      "cwd": "/path/to/Composter"
+      "command": "npx",
+      "args": ["composter-mcp"]
     }
   }
 }`,
       },
       {
         title: "Cursor",
-        path: "Settings > MCP",
+        path: ".cursor/mcp.json (in project root)",
         code: `{
-  "composter": {
-    "command": "node",
-    "args": ["mcp/src/server.js"],
-    "cwd": "/path/to/Composter"
+  "mcpServers": {
+    "composter": {
+      "command": "npx",
+      "args": ["composter-mcp"]
+    }
+  }
+}`,
+      },
+      {
+        title: "VS Code (Copilot)",
+        path: ".vscode/mcp.json (in project root)",
+        code: `{
+  "mcpServers": {
+    "composter": {
+      "command": "npx",
+      "args": ["composter-mcp"]
+    }
+  }
+}`,
+      },
+      {
+        title: "Windsurf",
+        path: "~/.codeium/windsurf/mcp_config.json",
+        code: `{
+  "mcpServers": {
+    "composter": {
+      "command": "npx",
+      "args": ["composter-mcp"]
+    }
   }
 }`,
       },
@@ -295,6 +329,28 @@ composter list buttons`,
         example: `Found the following components:
 - [ID: abc123] Button (Category: UI)
 - [ID: def456] ButtonGroup (Category: UI)`,
+      },
+      {
+        name: "list_categories",
+        description: "List all categories in your component vault.",
+        params: [],
+        example: `Your categories:
+- ui (5 components)
+- hooks (3 components)
+- layouts (2 components)`,
+      },
+      {
+        name: "list_components",
+        description: "List all components in a specific category.",
+        params: [
+          { name: "categoryName", type: "string", description: "The name of the category" },
+        ],
+        example: `Components in "ui":
+- Button
+- Card
+- Modal
+- Dropdown
+- Toast`,
       },
       {
         name: "read_component",

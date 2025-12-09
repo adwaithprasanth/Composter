@@ -12,15 +12,18 @@ Let **Claude**, **Cursor**, **GitHub Copilot**, and other MCP-compatible AI assi
 ## 🚀 Quick Start
 
 ```bash
-# 1. Login to Composter (if you haven't already)
+# 1) Install & login (once)
 npm install -g composter-cli
 composter login
 
-# 2. Auto-configure your AI assistant
-npx composter-mcp init claude
+# 2) Auto-configure your AI assistant
+#    Pick one of: claude | cursor | vscode | windsurf
+npx composter-mcp init cursor
+
+# 3) Restart your AI assistant
 ```
 
-**That's it!** Restart Claude Desktop and you're ready to go.
+**That's it!** Restart and Composter tools will appear.
 
 ---
 
@@ -31,20 +34,13 @@ npx composter-mcp init claude
 One command to set up everything:
 
 ```bash
-# For Claude Desktop
-npx composter-mcp init claude
-
-# For Cursor
-npx composter-mcp init cursor
-
-# For VS Code (Copilot)
-npx composter-mcp init vscode
-
-# For Windsurf
-npx composter-mcp init windsurf
+npx composter-mcp init claude   # Claude Desktop
+npx composter-mcp init cursor   # Cursor
+npx composter-mcp init vscode   # VS Code (Copilot)
+npx composter-mcp init windsurf # Windsurf
 ```
 
-This automatically creates/updates the config file for your AI assistant.
+This automatically creates/updates the right config file for your AI assistant.
 
 ### Manual Configuration
 

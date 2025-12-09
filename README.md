@@ -93,9 +93,9 @@ BETTER_AUTH_SECRET="your-secret-key"
 VITE_API_URL="http://localhost:3000"
 ```
 
-**mcp/.env**
+**mcp/.env** (optional, for development)
 ```env
-DATABASE_URL="postgresql://user:password@localhost:5432/composter"
+BASE_URL="http://localhost:3000"
 ```
 
 ### 3. Setup Database
@@ -179,6 +179,7 @@ Composter includes a Model Context Protocol (MCP) server that enables AI assista
 | Cursor | ✅ Supported |
 | GitHub Copilot | ✅ Supported |
 | VS Code + MCP Extensions | ✅ Supported |
+| Windsurf | ✅ Supported |
 
 ### Setup
 
@@ -187,39 +188,53 @@ Composter includes a Model Context Protocol (MCP) server that enables AI assista
    composter login
    ```
 
-2. **Add to your AI tool's MCP config:**
+2. **Auto-Configure (Recommended):**
+   ```bash
+   # For Claude Desktop
+   npx composter-mcp init claude
 
-   **Claude Desktop** (`~/.config/claude/claude_desktop_config.json`):
-   ```json
-   {
-     "mcpServers": {
-       "composter": {
-         "command": "node",
-         "args": ["/path/to/Composter/mcp/src/server.js"],
-         "cwd": "/path/to/Composter"
-       }
-     }
-   }
-   ```
+   # For Cursor
+   npx composter-mcp init cursor
 
-   **Cursor** (Settings > MCP):
-   ```json
-   {
-     "composter": {
-       "command": "node",
-       "args": ["mcp/src/server.js"],
-       "cwd": "/path/to/Composter"
-     }
-   }
+   # For VS Code (Copilot)
+   npx composter-mcp init vscode
+
+   # For Windsurf
+   npx composter-mcp init windsurf
    ```
 
 3. **Restart your AI assistant**
+
+### Manual Configuration
+
+If you prefer manual setup, add to your IDE's MCP config file:
+
+```json
+{
+  "mcpServers": {
+    "composter": {
+      "command": "npx",
+      "args": ["composter-mcp"]
+    }
+  }
+}
+```
+
+**Config file locations:**
+- **Claude Desktop (macOS):** `~/Library/Application Support/Claude/claude_desktop_config.json`
+- **Claude Desktop (Linux):** `~/.config/claude/claude_desktop_config.json`
+- **Claude Desktop (Windows):** `%APPDATA%\Claude\claude_desktop_config.json`
+- **Cursor:** `.cursor/mcp.json` (in project root)
+- **VS Code:** `.vscode/mcp.json` (in project root)
+- **Windsurf:** `~/.codeium/windsurf/mcp_config.json`
 
 ### MCP Tools
 
 | Tool | Description |
 |------|-------------|
 | `search_components` | Search components by name or category |
+| `list_categories` | List all categories in your vault |
+| `list_components` | List all components in a category |
 | `read_component` | Read the full source code of a component |
 
 For detailed MCP documentation, see [mcp/README.md](mcp/README.md).

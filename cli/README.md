@@ -318,21 +318,40 @@ Let AI assistants like **Claude**, **Cursor**, and **GitHub Copilot** access you
 
 ### One-Command Setup
 
+Login once, then auto-configure your IDE/assistant:
+
 ```bash
-# For Claude Desktop
-npx composter-mcp init claude
+# Login (if you haven't)
+composter login
 
-# For Cursor
-npx composter-mcp init cursor
-
-# For VS Code (Copilot)
-npx composter-mcp init vscode
-
-# For Windsurf
-npx composter-mcp init windsurf
+# Auto-configure (pick one)
+npx composter-mcp init claude   # Claude Desktop
+npx composter-mcp init cursor   # Cursor
+npx composter-mcp init vscode   # VS Code (Copilot)
+npx composter-mcp init windsurf # Windsurf
 ```
 
 Then restart your AI assistant — done!
+
+#### Manual config (if you prefer)
+```json
+{
+  "mcpServers": {
+    "composter": {
+      "command": "npx",
+      "args": ["composter-mcp"]
+    }
+  }
+}
+```
+
+Config file locations:
+- Cursor: `.cursor/mcp.json` (project root)
+- VS Code: `.vscode/mcp.json` (project root)
+- Claude Desktop (Linux): `~/.config/claude/claude_desktop_config.json`
+- Claude Desktop (macOS): `~/Library/Application Support/Claude/claude_desktop_config.json`
+- Claude Desktop (Windows): `%APPDATA%\\Claude\\claude_desktop_config.json`
+- Windsurf: `~/.codeium/windsurf/mcp_config.json`
 
 ### Available AI Tools
 
