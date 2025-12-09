@@ -19,14 +19,25 @@ const auth = betterAuth({
 
   trustedOrigins: [
     "http://localhost:5173",
+    "https://composter.vercel.app",
     process.env.CLIENT_URL
   ].filter(Boolean),
 
+  session: {
+    cookieCache: {
+      enabled: true,
+      maxAge: 5 * 60,
+    },
+  },
+
   advanced: {
+    useSecureCookies: true,
     cookieOptions: {
       sameSite: "none",
       secure: true,
       httpOnly: true,
+      path: "/",
+      domain: undefined,
     }
   },
 
