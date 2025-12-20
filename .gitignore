@@ -1,4 +1,18 @@
+# IDE
 .vscode
 .cursor
 .windsurf
 .claude
+
+# Environment files (never commit secrets!)
+.env
+.env.local
+.env.*.local
+*.env
+
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
