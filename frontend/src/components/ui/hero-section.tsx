@@ -113,8 +113,8 @@ const AnimatedBeamSection = () => {
 
     const folderItems = [
         <FolderPaperItem key="your" text="Your" />,
-        <FolderPaperItem key="components" text="Components" />,
-        <FolderPaperItem key="vault" text="Vault" />
+        <FolderPaperItem key="vault" text="Vault" />,
+        <FolderPaperItem key="components" text="Components" />
     ]
 
     return (
@@ -136,7 +136,7 @@ const AnimatedBeamSection = () => {
                         <Cursor size={32} />
                     </Circle>
                     <div ref={div4Ref} className="z-10">
-                        <Folder size={1.8} color="#8B5CF6" items={folderItems} />
+                        <Folder size={1.5} color="#8B5CF6" items={folderItems} />
                     </div>
                     <Circle ref={div6Ref}>
                         <Qwen.Color size={32} />
