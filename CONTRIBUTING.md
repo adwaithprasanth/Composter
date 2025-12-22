@@ -245,6 +245,32 @@ git push origin feature/your-feature-name
 
 ## 🚀 How to Contribute
 
+### Assignment & PR Policy
+
+To reduce duplicated work and make contributions predictable, follow this assignment-first approach:
+
+- **Ask before implementing**: Comment on the issue you want to work on with "I'd like to work on this" and wait for an assignment.
+- **We will assign**: A maintainer or collaborator will assign the issue to you. Once assigned, you have the assignment for a reasonable timeframe (recommended: 3–7 days) to open a PR addressing it.
+- **Unassigned issues**: If an issue is unassigned, contributors may request assignment. If multiple people ask, maintainers will decide and assign the best fit.
+- **No response / timeout**: If the assignee doesn't open a PR within the agreed timeframe, a maintainer may unassign the issue so others can pick it up.
+
+Fallback rules if an issue is unassigned and multiple PRs arrive:
+
+- **First valid PR wins**: The first PR that meets the project's quality standards (tests, style, described changes) will generally be accepted.
+- **Exception for significantly better PRs**: If a later PR is clearly superior (better tests, performance, or design), maintainers may request the first author incorporate improvements or, rarely, choose the better PR while acknowledging the first author.
+
+Handling "drive-by" PRs (no prior assignment):
+
+- If the drive-by PR solves an unclaimed issue and is high-quality, it may be merged. Maintainers should politely ask contributors to request assignment next time to avoid duplicate effort.
+
+Recommendations by issue type:
+
+- **Good First Issues**: Always assign to one person at a time. Use the `good first issue` label.
+- **Help Wanted**: Assign if someone asks; otherwise, first-come-first-served.
+- **Critical Bugs**: Core team or fastest/most reliable submitter handles these; maintainers may prioritize.
+
+See `docs/using-templates.md` for template usage and include `Closes #<ISSUE_ID>` in PR descriptions so issues auto-close on merge.
+
 ### 1. Select an Issue
 
 - Browse the [Issues page](https://github.com/binit2-1/Composter/issues)
