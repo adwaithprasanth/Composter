@@ -10,7 +10,7 @@ const Docs = lazy(() => import("../pages/Docs.jsx"));
 // Auth Pages
 const Login = lazy(() => import("../pages/Auth/Login.jsx"));
 const Signup = lazy(() => import("../pages/Auth/Signup.jsx"));
-const ResetPassword = lazy(() => import("../pages/Auth/ResetPassword.jsx"));
+// TODO: import ResetPassword component 
 
 // Dashboard Pages
 const DashboardLayout = lazy(() => import("../components/layout/DashboardLayout.jsx"));
@@ -39,7 +39,7 @@ const AppRouter = () => {
           {/* Auth Routes */}
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
+          {/* TODO: add route for /reset-password */}
 
           {/* Dashboard Routes - Protected */}
           <Route path="/app" element={

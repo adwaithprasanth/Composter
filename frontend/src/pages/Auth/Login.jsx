@@ -100,11 +100,8 @@ const Login = () => {
                                 required
                                 className="w-full px-4 py-3 rounded-xl bg-background/50 border border-border/50 text-foreground placeholder-muted-foreground/50 outline-none transition-all duration-200 focus:border-primary/50 focus:ring-2 focus:ring-primary/20 hover:border-border"
                             />
-                            <div className="flex justify-end mt-2">
-                                <Link to="/reset-password" className="text-xs text-primary hover:text-primary/80 transition-colors">
-                                    Forgot password?
-                                </Link>
-                            </div>
+                            {/* TODO: add link for the forget password here  */}
+                          
                         </div>
 
                         <Button type="submit" className="w-full h-12 text-base rounded-xl mt-2" disabled={loading}>
