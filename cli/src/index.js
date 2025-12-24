@@ -57,4 +57,23 @@ program
     pullComponent(category, title, filepath);
   });
 
+process.on("SIGINT", () => {
+  process.stdout.write("\n");
+  process.exit(130);
+});
+
+process.on("unhandledRejection", (err) => {
+  // Ctrl+C during fetch / inquirer
+  if (
+    err?.name === "AbortError" ||
+    err?.name === "ExitPromptError"
+  ) {
+    process.stdout.write("\nOperation cancelled by user.\n");
+    process.exit(130);
+  }
+
+  console.error(err);
+  process.exit(1);
+});
+
 program.parse(process.argv);
