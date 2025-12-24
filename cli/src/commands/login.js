@@ -11,7 +11,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 dotenv.config({ path: join(__dirname, "../../.env") });
 
-const BASE_URL = `${process.env.BASE_URL}`;
+const BASE_URL = `${process.env.BASE_URL}/auth`;
 
 export async function login() {
   console.log("=== Composter Login ===");

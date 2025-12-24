@@ -6,6 +6,10 @@ export function handleFetchError(err) {
       log.error("Cannot reach server. Check your internet or VPN connection.");
       break;
 
+    case "SESSION_EXPIRED":
+      log.warn("Your session has expired. Please log in again.");
+      break;
+    
     case "UNAUTHORIZED":
       log.error("Invalid email or password.");
       break;

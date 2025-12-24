@@ -1,35 +1,45 @@
-import fetch from "node-fetch";
-import { loadSession, clearSession } from "./session.js";
+import { clearSession, loadSession } from "./session.js";
 import dotenv from "dotenv";
+import { safeFetch } from "./safeFetch.js";
+import { handleSessionError } from "./errorHandlers/sessionErrorHandler.js";
+import { handleFetchError } from "./errorHandlers/fetchErrorHandler.js";
+import { log } from "./log.js";
 dotenv.config({ silent: true });
 
 const BASE_URL = process.env.BASE_URL || "https://composter.onrender.com/api";
 
 export async function apiRequest(path, options = {}) {
-  const session = loadSession();
+
+  try {
+    const session = loadSession();
+    const headers = options.headers || {};
   
-  if (!session) {
-    console.error("Not authenticated. Please run 'composter login'");
-    process.exit(1);
-  }
+    if (session?.jwt) {
+      headers["Authorization"] = `Bearer ${session.jwt}`;
+    }
   
-  const headers = options.headers || {};
-
-  if (session?.jwt) {
-    headers["Authorization"] = `Bearer ${session.jwt}`;
+    const res = await safeFetch(`${BASE_URL}${path}`, {
+      ...options,
+      headers,
+    });
+  
+    return res;
+  } catch (error) {
+      if (error.type === "SESSION_ERROR") {
+        handleSessionError(error);
+        process.exit(1);
+      } 
+      else {
+        // if we get an 401 error, it usually means the session is invalid or expired
+        // hence we clear the session and handle the error accordingly
+        if(error.type === "FETCH_ERROR" && error.message === "UNAUTHORIZED") {
+          clearSession();
+          log.warn("Session invalid or expired. Please log in again.");
+          log.info("Run: composter login");
+          process.exit(1);
+        }
+        handleFetchError(error);
+      }
   }
 
-  const res = await fetch(`${BASE_URL}${path}`, {
-    ...options,
-    headers,
-  });
-
-  // Handle 401 Unauthorized (expired/invalid session)
-  if (res.status === 401) {
-    console.error("Authentication failed. Please run 'composter login' again");
-    clearSession();
-    process.exit(1);
-  }
-
-  return res;
 }
