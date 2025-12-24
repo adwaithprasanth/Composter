@@ -253,7 +253,7 @@ const Docs = () => {
           <div className="space-y-6">
             {content.steps.map((step, i) => (
               <div key={i}>
-                {step.title ? (
+                {step.title && (
                   <>
                     <h4 className="text-base sm:text-lg font-medium text-foreground mb-3">{step.title}</h4>
                     <p className="text-muted-foreground mb-4">{step.description}</p>
@@ -291,13 +291,6 @@ const Docs = () => {
                             )}
                     {step.code && <CodeBlock code={step.code} />}
                   </>
-                ) : (
-                  <li className="flex items-start gap-3">
-                    <span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary text-sm font-medium shrink-0">
-                      {i + 1}
-                    </span>
-                    <span className="text-muted-foreground pt-0.5">{step}</span>
-                  </li>
                 )}
               </div>
             ))}
@@ -306,7 +299,7 @@ const Docs = () => {
 
         {/* Simple numbered list steps (dashboard-upload) */}
         {content.steps && typeof content.steps[0] === 'string' && (
-          <ol className="space-y-4">
+          <ol className="space-y-4 mb-12">
             {content.steps.map((step, i) => (
               <li key={i} className="flex items-start gap-3">
                 <span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary text-sm font-medium shrink-0">
