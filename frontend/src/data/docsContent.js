@@ -258,7 +258,7 @@ npx composter-mcp init windsurf`,
       },
       {
         title: "Docs & Packages",
-        description: "Refer to the npm package pages for CLI and MCP usage.",
+        description: "Refer to the npm package pages for MCP usage.",
         links: [
           { label: "MCP: https://www.npmjs.com/package/composter-mcp", href: "https://www.npmjs.com/package/composter-mcp" },
         ],

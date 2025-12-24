@@ -331,6 +331,7 @@ const Docs = () => {
                 {content.links && (
                   <>
                     <h3 className={`text-lg sm:text-xl font-medium text-foreground mb-2 mt-4`}>Docs & packages</h3>
+                    <p className="text-muted-foreground mb-2 font-[font]">Refer to the npm package pages for CLI usage.</p>
                     <div className="flex flex-col gap-2 mt-2">
                       {content.links.map((link, idx) => (
                         <a
