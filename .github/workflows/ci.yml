@@ -19,43 +19,37 @@ jobs:
         with:
           fetch-depth: 2
 
-      # 1️⃣ FIX: Upgrade to Node 22 for MCP Inspector
+      # 1️⃣ Upgrade to Node 22 (Required for MCP)
       - name: Setup Node.js 22
         uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: "npm"
 
-      # 2️⃣ FIX: Add Dummy Env Vars for Prisma Generate
+      # 2️⃣ Install Dependencies (With Dummy Env)
+      # We provide a fake URL so the 'postinstall' (prisma generate) script doesn't crash.
       - name: Install Dependencies
         run: npm ci
         env:
-          # Prisma needs this to validate schema, even if not connecting
           DATABASE_URL: "postgresql://dummy:password@localhost:5432/mydb"
-          # Add other envs if your postinstall scripts need them
-          BETTER_AUTH_SECRET: "dummy_secret"
+          BETTER_AUTH_SECRET: "dummy_secret_for_install"
 
-      # 3️⃣ Build API (ensure DATABASE_URL is available for Prisma)
-      - name: Build API
-        working-directory: apps/api
+      # 3️⃣ Generate Prisma Client (Safe Mode)
+      # Explicitly generate the client so the build has the types it needs.
+      - name: Generate Prisma Client
+        run: npx turbo run generate --filter=@composter/api
         env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-        run: |
-          npm install
-          npx prisma generate
-          if [ -n "$DATABASE_URL" ]; then
-            # If a previous migration failed but the DB was updated manually,
-            # mark the specific migration as applied to allow subsequent migrations.
-            npx prisma migrate resolve --applied 20251224101333_add_unique_contraint || true
-            npx prisma migrate deploy || true
-          else
-            echo "DATABASE_URL not set — skipping prisma migrate deploy"
-          fi
+          DATABASE_URL: "postgresql://dummy:password@localhost:5432/mydb"
+          # If you don't have a "generate" script in package.json, 
+          # you can use: npx prisma generate --schema=apps/api/prisma/schema.prisma
 
+      # 4️⃣ Run Turbo Pipeline (Build & Lint)
+      # We use dummy variables because we are only compiling code, not running it.
       - name: Run Turbo Pipeline
         run: npx turbo run build lint
         env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
-          BETTER_AUTH_URL: ${{ secrets.BETTER_AUTH_URL }}
-          CLIENT_URL: ${{ secrets.CLIENT_URL }}
+          DATABASE_URL: "postgresql://dummy:password@localhost:5432/mydb"
+          BETTER_AUTH_SECRET: "dummy_secret_for_build"
+          BETTER_AUTH_URL: "http://localhost:3000"
+          CLIENT_URL: "http://localhost:5173"
+          VITE_API_URL: "http://localhost:3000"
