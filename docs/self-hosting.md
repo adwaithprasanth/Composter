@@ -170,6 +170,27 @@ npm start
 - API: http://localhost:3000
 - API Health: http://localhost:3000/health
 
+### Developer tips (MCP & CLI)
+
+When self-hosting for development you may also want to run the MCP server and the CLI locally to test integrations.
+
+```bash
+# From repo root
+cd packages/mcp
+npm install
+npm start           # run MCP server
+
+cd ../cli
+npm install
+npx node ./bin/composter.js login   # run CLI against local API
+
+# Run the inspector for debugging MCP interactions
+cd ../mcp
+npm run server:inspect
+```
+
+Use the inspector to trace MCP requests and verify AI assistant connections when testing against a self-hosted instance.
+
 ## Production Deployment
 
 ### Option 1: Deploy to Render (Backend) + Vercel (Frontend)

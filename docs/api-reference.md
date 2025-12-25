@@ -479,6 +479,20 @@ async function createComponent(category, title, code) {
 })();
 ```
 
+## Developer / Local API
+
+If you're developing integrations or testing the API locally, run the API server and point clients (CLI/frontend) to the local base URL.
+
+```bash
+cd api
+npm install
+npm run dev
+# Base URL when running locally:
+# http://localhost:3000/api
+```
+
+When debugging MCP or CLI flows, ensure the API server is running and that `COMPOSTER_API_URL` / `COMPOSTER_API_URL` env variables used by the CLI and MCP point to the local API base URL.
+
 ### Python
 
 ```python

@@ -169,3 +169,52 @@ Now that you're set up, explore:
 - [Self-Hosting](self-hosting.md) - Run your own instance
 
 Happy composting! 🌱
+
+## Developer / Local Development
+
+If you're developing Composter itself (CLI, API, frontend, or MCP), here are quick commands and tips.
+
+- **Run the API (dev):**
+
+```bash
+cd api
+npm install
+# start with nodemon or the project's dev script
+npm run dev
+```
+
+- **Run the frontend (dev):**
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+- **Run the CLI locally:**
+
+```bash
+cd cli
+npm install
+# run the CLI commands via npx during development
+npx node ./bin/composter.js login
+```
+
+- **Run MCP server (dev):**
+
+```bash
+cd packages/mcp
+npm install
+npm start
+# or run the inspector (see MCP docs) to debug MCP interactions
+```
+
+- **Inspector (MCP debugging):** The project includes the Model Context Protocol inspector. From `packages/mcp` you can run:
+
+```bash
+cd packages/mcp
+npm run server:inspect
+# which runs: npx @modelcontextprotocol/inspector node src/server.js
+```
+
+These will help you iterate quickly while developing integrations and QA-ing the MCP/CLI flows.
