@@ -11,6 +11,11 @@ jobs:
     name: Build & Test
     runs-on: ubuntu-latest
 
+    # 👇 ADD THIS BLOCK HERE
+    permissions:
+      contents: read
+    # 👆 END ADDITION
+
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
