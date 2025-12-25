@@ -1,9 +1,8 @@
 import inquirer from "inquirer";
 import { safeFetch } from "../utils/safeFetch.js";
 import { saveSession } from "../utils/session.js";
-import dotenv from "dotenv";
 import { fileURLToPath } from "url";
-import { dirname, join } from "path";
+import { dirname } from "path";
 import { log } from "../utils/log.js";
 import { handleFetchError } from "../utils/errorHandlers/fetchErrorHandler.js";
 import chalk from "chalk";
@@ -11,7 +10,6 @@ import { composterLoginArtv2 } from "../constants/asciiArts.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-dotenv.config({ path: join(__dirname, "../../.env") });
 
 const BASE_URL = `${process.env.BASE_URL}/auth`;
 

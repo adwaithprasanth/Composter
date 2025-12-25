@@ -1,12 +1,10 @@
 import { clearSession, loadSession } from "./session.js";
-import dotenv from "dotenv";
 import { safeFetch } from "./safeFetch.js";
 import { handleSessionError } from "./errorHandlers/sessionErrorHandler.js";
 import { handleFetchError } from "./errorHandlers/fetchErrorHandler.js";
 import { log } from "./log.js";
-dotenv.config({ silent: true });
 
-const BASE_URL = process.env.BASE_URL || "https://composter.onrender.com/api";
+const BASE_URL = process.env.BASE_URL;
 
 export async function apiRequest(path, options = {}) {
 

@@ -1,5 +1,7 @@
 #!/usr/bin/env node
-
+process.env.DOTENV_CONFIG_QUIET = "true";
+process.env.DOTENVX_QUIET = "true";
+import "dotenv/config";
 import { Command } from "commander";
 import { login } from "./commands/login.js";
 import { mkcat } from "./commands/mkcat.js";
@@ -84,5 +86,4 @@ process.on("unhandledRejection", (err) => {
   process.exit(1);
 });
 
-  // await program.parseAsync(process.argv);
 program.parse(process.argv);
