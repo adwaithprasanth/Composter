@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import { log } from "./log.js";
 
 const IMPORT_REGEX = /(?:import|export)\s+(?:[\w*\s{},]*\s+from\s+)?['"]([^'"]+)['"]/g;
 
@@ -37,14 +38,16 @@ export function scanComponent(entryFilePath) {
     if (fs.existsSync(localPkgPath)) {
       localPkg = JSON.parse(fs.readFileSync(localPkgPath, "utf-8"));
     }
-  } catch (e) {}
+  } catch (e) {
+    log.warn("Could not read local package.json. The file may be corrupted")
+  }
 
   while (queue.length > 0) {
     const fullPath = queue.shift();
     if (processed.has(fullPath)) continue;
     
     if (!fs.existsSync(fullPath)) {
-      console.warn(`⚠️  Warning: File not found: ${fullPath}`);
+      log.warn(`Warning: File not found - ${fullPath}`);
       continue;
     }
 

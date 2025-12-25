@@ -1,30 +1,48 @@
 import fs from "fs";
 import { SESSION_PATH, ensureConfigDir } from "./paths.js";
 
+class SessionError extends Error {
+  constructor(message) {
+    super(message);
+    this.type = "SESSION_ERROR";
+  }
+}
 export function saveSession(sessionData) {
-  ensureConfigDir();
-  fs.writeFileSync(SESSION_PATH, JSON.stringify(sessionData, null, 2), "utf-8");
+  try {
+    ensureConfigDir();
+    fs.writeFileSync(SESSION_PATH, JSON.stringify(sessionData, null, 2), "utf-8");
+  } catch (error) {
+    throw new SessionError("FAILED_SESSION_SAVE");
+  }
 }
 
 export function loadSession() {
-  if (!fs.existsSync(SESSION_PATH)) return null;
-  
-  try {
-    const session = JSON.parse(fs.readFileSync(SESSION_PATH, "utf-8"));
-    
-    // Check if session is expired
-    if (session.expiresAt && new Date(session.expiresAt) < new Date()) {
-      console.log("Session expired. Please run 'composter login' again.");
-      clearSession();
-      return null;
-    }
-    
-    return session;
-  } catch (error) {
-    console.error("Invalid session file. Please run 'composter login' again.");
-    clearSession();
-    return null;
+  if (!fs.existsSync(SESSION_PATH)) {
+    throw new SessionError("NO_SESSION");
   }
+  
+  let session;
+
+  // read and parse session file
+  try {
+    session = JSON.parse(fs.readFileSync(SESSION_PATH, "utf-8"));
+  } catch (error) {
+    clearSession();
+    throw new SessionError("SESSION_FILE_CORRUPT");
+  }
+   
+  // validate session structure and if expiry is valid date
+  if (!session.expiresAt || isNaN(Date.parse(session.expiresAt))) {
+    clearSession();
+    throw new SessionError("SESSION_INVALID");
+  }
+
+  // check if session is expired
+  if (new Date(session.expiresAt) < new Date()) {
+    clearSession();
+    throw new SessionError("SESSION_EXPIRED");
+  } 
+  return session;
 }
 
 export function clearSession() {

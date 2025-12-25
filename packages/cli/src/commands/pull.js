@@ -1,28 +1,22 @@
+import chalk from "chalk";
+import { log } from "../utils/log.js";
 import { apiRequest } from "../utils/request.js";
-import { loadSession } from "../utils/session.js";
 import fs from "fs";
 import path from "path";
 
 export async function pullComponent(category, title, targetDir) { 
     // 1. Validate Input
+    // although commander ensures these are provided, we double-check here
     if (!category?.trim() || !title?.trim() || !targetDir?.trim()) {
-        console.log("❌ Category, title, and target directory are required.");
-        return;
+        log.error("Category, title, and target directory are required.");
+        process.exit(1);
     }
  
     // 2. Resolve Target Directory
     // In multi-file mode, the target is usually a FOLDER, not a specific file.
     const absoluteRoot = path.resolve(targetDir);
  
-    // 3. Check Session
-    const session = loadSession();
-    if (!session || !session.jwt) {
-        console.log("❌ You must be logged in. Run: composter login");
-        return;
-    }
- 
-    try {
-        console.log(`⏳ Fetching '${title}' from '${category}'...`);
+        log.info(`⏳ Fetching '${title}' from '${category}'...`);
 
         const res = await apiRequest(`/components?category=${encodeURIComponent(category)}&title=${encodeURIComponent(title)}`, {
             method: "GET",
@@ -33,22 +27,9 @@ export async function pullComponent(category, title, targetDir) {
         let body = null;
         try { body = await res.json(); } catch {}
 
-        if (res.status === 401) {
-            console.log("❌ Session expired. Run composter login again.");
-            return;
-        }
-        if (res.status === 404) {
-            console.log(`❌ Component '${title}' not found.`);
-            return;
-        }
-        if (!res.ok) {
-            console.log("❌ Server error:", body?.error || res.statusText);
-            return;
-        }
+        const component = body.component ?? null;
 
-        const component = body.component;
-
-        // --- STEP 4: PARSE FILES (Handle JSON vs String) ---
+        // PARSE FILES (Handle JSON vs String) 
         let filesMap = {};
         try {
             // Try to parse new multi-file format
@@ -64,8 +45,8 @@ export async function pullComponent(category, title, targetDir) {
             filesMap[`/${fileName}`] = component.code;
         }
 
-        // --- STEP 5: WRITE FILES TO DISK ---
-        console.log(`📦 Unpacking ${Object.keys(filesMap).length} file(s) into: ${absoluteRoot}`);
+        // WRITE FILES TO DISK 
+        log.info(`📦 Unpacking ${Object.keys(filesMap).length} file(s) into: ${absoluteRoot}`);
 
         // Ensure the root target folder exists
         if (!fs.existsSync(absoluteRoot)) {
@@ -90,19 +71,15 @@ export async function pullComponent(category, title, targetDir) {
             // Write file
             fs.writeFileSync(writePath, content, "utf-8");
             createdFiles.push(relPath);
-            console.log(`   + ${relPath}`);
+            console.log(chalk.cyan(`   + ${relPath}`));
         }
 
-        // --- STEP 6: CHECK DEPENDENCIES ---
+        // CHECK DEPENDENCIES 
         if (component.dependencies && Object.keys(component.dependencies).length > 0) {
             checkDependencies(component.dependencies);
         }
 
-        console.log(`\n✅ Component '${title}' pulled successfully!`);
-
-    } catch (err) {
-        console.log("❌ Error pulling component:", err);
-    }
+        log.success(`Component '${title}' pulled successfully!`);
 }
 
 /**
@@ -113,8 +90,8 @@ function checkDependencies(requiredDeps) {
     
     // If no package.json, we can't check, so just list them all
     if (!fs.existsSync(localPkgPath)) {
-        console.log("\n⚠️  This component requires these packages:");
-        Object.entries(requiredDeps).forEach(([pkg, ver]) => console.log(`   - ${pkg}@${ver}`));
+        log.warn("This component requires these packages:");
+        Object.entries(requiredDeps).forEach(([pkg, ver]) => log.warn(`   - ${pkg}@${ver}`));
         return;
     }
 
@@ -130,10 +107,10 @@ function checkDependencies(requiredDeps) {
         }
 
         if (missing.length > 0) {
-            console.log("\n⚠️  Missing Dependencies (Run this to fix):");
-            console.log(`   npm install ${missing.map(d => d.split('@')[0]).join(" ")}`);
+            log.warn("Missing Dependencies (Run this to fix):");
+            log.info(`   npm install ${missing.map(d => d.split('@')[0]).join(" ")}`);
         } else {
-            console.log("\n✨ All dependencies are already installed.");
+            log.info("All dependencies are already installed.");
         }
     } catch (e) {
         // Ignore JSON parse errors
