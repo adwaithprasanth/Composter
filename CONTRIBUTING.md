@@ -359,6 +359,18 @@ Composter/
 └── docs/                # Documentation files
 ```
 
+## Documentation
+
+User-facing and developer documentation lives in the `docs/` folder. Please update the relevant markdown files when you change features or developer workflows.
+
+Key docs:
+- `docs/getting-started.md` — beginner and developer quick-starts
+- `docs/api-reference.md` — API endpoints and local API dev notes
+- `docs/mcp-integration.md` — MCP setup and inspector/debugging commands
+
+If you plan to change documentation, run a quick local preview (your editor or static site tool) to validate links and screenshots.
+
+
 ### Key Files
 
 - **API (Backend):**

@@ -52,6 +52,9 @@
 - GitHub: [github.com/binit2-1/Composter](https://github.com/binit2-1/Composter)
  - Wiki: [DeepWiki - Composter](https://deepwiki.com/binit2-1/Composter)
 
+- Documentation: see the `docs/` folder for user and developer guides (`docs/getting-started.md`, `docs/api-reference.md`, `docs/mcp-integration.md`).
+
+
 ## 🚀 Quick Start
 
 ### For Users (No Setup Required)
@@ -265,9 +268,12 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 Thanks to all our contributors! 🎉
 
+[![Contributors](https://img.shields.io/github/contributors/binit2-1/Composter.svg)](https://github.com/binit2-1/Composter/graphs/contributors)
+
 <a href="https://github.com/binit2-1/Composter/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=binit2-1/Composter&max=500&anon=1" />
+  <img src="https://contrib.rocks/image?repo=binit2-1/Composter&max=1000&anon=1" alt="Contributors" />
 </a>
+
 
 ---
 
