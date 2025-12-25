@@ -1,0 +1,46 @@
+{
+  "name": "@composter/mcp",
+  "version": "2.0.0",
+  "private": false,
+  "type": "module",
+  "description": "MCP (Model Context Protocol) server for Composter - Let AI assistants access your React component vault",
+  "main": "src/server.js",
+  "bin": {
+    "composter-mcp": "./bin/composter-mcp.js"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "server:inspect": "npx @modelcontextprotocol/inspector node src/server.js"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "ai",
+    "claude",
+    "cursor",
+    "copilot",
+    "react",
+    "components",
+    "composter"
+  ],
+  "author": "binit2-1",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/binit2-1/Composter.git"
+  },
+  "homepage": "https://composter.vercel.app",
+  "bugs": {
+    "url": "https://github.com/binit2-1/Composter/issues"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.23.0",
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "@modelcontextprotocol/inspector": "^0.18.0"
+  }
+}
