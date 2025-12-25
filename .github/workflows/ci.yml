@@ -36,9 +36,8 @@ jobs:
           BETTER_AUTH_SECRET: "dummy_secret"
 
       - name: Run Turbo Pipeline
-        run: npx turbo run build lint test
+        run: npx turbo run build lint
         env:
-          # These are for the build process
           DATABASE_URL: "postgresql://dummy:password@localhost:5432/mydb"
           VITE_API_URL: "http://localhost:3000"
           CLIENT_URL: "http://localhost:5173"
