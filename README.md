@@ -36,7 +36,7 @@
 
 ## ✨ Features
 
-- **🗃️ Component Vault** — Store and organize your React components in categories
+-- **🗃️ Component Vault** — Store and organize your React components in categories
 - **⚡ CLI Tool** — Push, pull, and manage components directly from your terminal
 - **🎨 Web Dashboard** — Visual interface to browse, preview, and manage your library
 - **🔌 MCP Compatible** — Works with Claude, Cursor, GitHub Copilot, and other AI assistants
@@ -57,9 +57,9 @@
 ### For Users (No Setup Required)
 
 1. **Install the CLI:**
-   ```bash
-   npm install -g composter-cli
-   ```
+  ```bash
+  npm install -g composter-cli
+  ```
 
 2. **Login and start using:**
    ```bash
@@ -73,7 +73,57 @@
 
 ### For Contributors
 
-Want to contribute or run locally? See [CONTRIBUTING.md](CONTRIBUTING.md) for full setup instructions.
+Want to contribute or run locally? See [CONTRIBUTING.md](CONTRIBUTING.md) for full setup instructions. Short setup:
+
+```bash
+# Install dependencies at repo root (monorepo)
+npm install
+
+# Start API
+cd apps/api && npm run dev
+
+# Start Web
+cd ../web && npm run dev
+```
+
+### Run the whole monorepo (recommended)
+
+This repository uses Turbo (turborepo) to orchestrate apps and packages. From the repository root you can run the full development environment with one command.
+
+```bash
+# From repo root
+npm install         # if you haven't already
+npm run dev         # runs `turbo dev` which starts services in parallel
+```
+
+Turbo will run the `dev` scripts defined in each workspace (for example `apps/api`, `apps/web`, `cli`, `mcp`). If you need to run only a subset, use Turbo filtering:
+
+```bash
+# Run only API and Web
+npx turbo dev --filter=apps/api... --filter=apps/web...
+
+# Run only the web app
+npx turbo dev --filter=apps/web
+```
+
+Environment variables
+
+- Create per-service `.env` files (for example `apps/api/.env` and `apps/web/.env`), or set them in your shell.
+- For local development the important vars are `DATABASE_URL`, `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, and `CLIENT_URL`.
+
+Example `apps/api/.env`:
+
+```
+DATABASE_URL="postgresql://user:password@localhost:5432/composter"
+BETTER_AUTH_SECRET="your_secret_here"
+BETTER_AUTH_URL="http://localhost:3000"
+CLIENT_URL="http://localhost:5173"
+```
+
+Notes
+
+- If you change ports or hostnames, update `CLIENT_URL` and `VITE_API_BASE_URL` in `apps/web/.env` or `apps/web/.env.production`.
+- To build everything for production use `npm run build` from the repo root (runs `turbo build`).
 
 ## 📖 Usage
 

@@ -393,6 +393,36 @@ composter pull ui "Button" ./components/
 composter rm ui "OldButton"
 ```
 
+## Developer / Debugging (CLI)
+
+When working on the `composter` CLI itself, use the local package to iterate and debug quickly.
+
+- Install and run locally:
+
+```bash
+cd cli
+npm install
+# Run a subcommand directly (use npx or node)
+npx node ./bin/composter.js ls
+```
+
+- Session file location (useful when testing auth):
+
+```
+~/.config/composter/session.json
+```
+
+- Run CLI against a local API instance by overriding the API URL:
+
+```bash
+export COMPOSTER_API_URL="http://localhost:3000/api"
+npx node ./bin/composter.js ls
+```
+
+- Tips:
+  - Use `DEBUG` or `NODE_DEBUG` env vars in the CLI package if you add logging.
+  - When updating the CLI code, re-run the `npx node ./bin/composter.js` command to pick up changes.
+
 ### Batch Operations
 
 ```bash

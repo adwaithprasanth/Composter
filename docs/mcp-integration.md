@@ -61,6 +61,36 @@ Ask your AI assistant:
 
 The AI should respond with your component categories!
 
+## Developer / MCP Debugging
+
+If you are developing or debugging the MCP server or integrations, these commands are helpful.
+
+- **Run MCP server locally:**
+
+```bash
+cd packages/mcp
+npm install
+npm start
+# starts the MCP server (entry: src/server.js)
+```
+
+- **Run the MCP Inspector:**
+
+The repository includes the Model Context Protocol inspector as a dev dependency. From `packages/mcp` run:
+
+```bash
+cd packages/mcp
+npm run server:inspect
+# runs: npx @modelcontextprotocol/inspector node src/server.js
+```
+
+This launches the inspector which provides an interactive UI and logging to inspect MCP requests, responses, and AI assistant interactions. Use it when an AI assistant cannot find components or when troubleshooting auth/session issues.
+
+- **Common dev tips:**
+  - Ensure your CLI session is valid (`composter login`) before testing MCP flows.
+  - Point your MCP client (VS Code / Cursor / Claude config) to the local MCP server address (usually `http://localhost:PORT` as printed by the MCP server).
+  - Check MCP server logs and the inspector output for request/response traces.
+
 ## Manual Setup
 
 If auto-configuration doesn't work, follow these manual steps:
