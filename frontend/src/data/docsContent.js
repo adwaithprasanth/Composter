@@ -92,7 +92,7 @@ Save components once, then pull them into any project using the CLI or web dashb
         {
           title: "Pull components",
           description: "Pull any component from your vault into your current project.",
-          code: "composter pull <CATEGORY_NAME> <COMPONENT_NAME> <PATH_TO_IMPORT>",
+          code: "composter pull <category-name> <component-name> <file-path>",
         },
       ],
       manual: [
@@ -119,17 +119,17 @@ Save components once, then pull them into any project using the CLI or web dashb
       {
         title: "Create a category",
         description: "Categories help you organize related components together.",
-        code: "composter mkcat <CATEGORY_NAME>",
+        code: "composter mkcat <category-name>",
       },
       {
         title: "Push your first component",
         description: "Upload a component file to your vault.",
-        code: "composter push <CATEGORY_NAME> <COMPONENT_NAME> <FILE_PATH_TO_COMPONENT>",
+        code: "composter push <category-name> <component-name> <file-path>",
       },
       {
         title: "Pull into another project",
         description: "Download the component into your current working directory.",
-        code: "composter pull <CATEGORY_NAME> <COMPONENT_NAME> <PATH_TO_IMPORT>",
+        code: "composter pull <category-name> <component-name> <file-path>",
       },
     ],
   },
@@ -143,39 +143,51 @@ Save components once, then pull them into any project using the CLI or web dashb
     description: "Authenticate with your Composter account to access your component vault.",
     code: "composter login",
     note: "You'll be prompted to enter your email and password. Your session token is stored locally for future commands.",
+    links: [
+      { label: "CLI: https://www.npmjs.com/package/composter-cli", href: "https://www.npmjs.com/package/composter-cli" },
+    ],
   },
 
   "cli-push": {
     title: "Push Components",
     description: "Upload components to your vault for later use.",
-    code: `composter push <category> <file-path>
+    code: `composter push <category-name> <file-path>
 
 # Example
 composter push buttons ./src/Button.jsx
 composter push cards ./src/ProfileCard.tsx`,
     args: [
-      { name: "category", description: "The category to store the component in" },
-      { name: "file-path", description: "Path to your component file" },
+      { name: "category-name", description: "The category to store the component in" },
+      { name: "component-name", description: "Name of the component being uploaded" },
+      { name: "file-path", description: "Path to your component file" }, 
     ],
   },
 
   "cli-pull": {
     title: "Pull Components",
     description: "Download components from your vault into your project.",
-    code: `composter pull <category> <component-name>
+    code: `composter pull <category-name> <component-name>
 
 # Example
 composter pull buttons PrimaryButton`,
-    note: "Components are downloaded to a `composter/` folder in your current directory.",
+  args: [
+    { name: "category-name",description: "The category to store the component in"},
+    { name: "component-name", description: "Name of the component being uploaded" },
+    { name: "file-path", description: "Path to your component file"},
+  ],
+    note: "Components are downloaded to a `composter/` folder in your current directory."
   },
 
   "cli-list": {
     title: "List Components",
     description: "View all components in a category.",
-    code: `composter list <category>
+    code: `composter list <category-name>
 
 # Example
 composter list buttons`,
+  args: [
+    { name: "category-name", description: "Category whose components you want to list"},
+  ],
   },
 
   // ============================================
